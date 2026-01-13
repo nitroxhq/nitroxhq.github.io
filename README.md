@@ -1,2 +1,2 @@
-# nitroxhq.github.io
+# Nitrox
 Source code for the Nitrox landing page.
