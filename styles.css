@@ -97,6 +97,11 @@ body {
   gap: 1rem;
   padding: 2rem;
 }
+
+
+
+
+
 /* Hero container: no dark box, center content responsively */
 .hero {
   padding: 0;
@@ -167,3 +172,142 @@ body {
 .btn-web:hover { background: rgba(255,255,255,0.12); }
 
 
+
+
+
+
+/* Products Section */
+.products-section {
+  background-color: #2a2a2a;
+  padding: 4rem 2rem;
+  width: 100%;
+  margin-top: 3rem;
+}
+
+.products-grid {
+  display: flex;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  flex-wrap: nowrap;
+}
+
+.product-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 280px;
+  height: fit-content;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.tesseract-card {
+  background: linear-gradient(135deg, #A161EA 0%, rgba(161, 97, 234, 0.1) 100%);
+}
+
+.prism-card {
+  background: linear-gradient(135deg, #64FA53 0%, rgba(100, 250, 83, 0.1) 100%);
+}
+
+.niko-card {
+  background: linear-gradient(135deg, #4169E1 0%, rgba(65, 105, 225, 0.1) 100%);
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.card-icon-container {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.card-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+  color: #000000;
+  text-transform: lowercase;
+}
+
+.card-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #333333;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+  text-transform: lowercase;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.btn-card {
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-block;
+  transition: transform 160ms ease, filter 160ms ease;
+  text-transform: lowercase;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-download-card {
+  background-color: #2563eb;
+  color: #ffffff;
+  flex: 1;
+}
+
+.btn-download-card:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.btn-learn-card {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #000000;
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.btn-learn-card:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
