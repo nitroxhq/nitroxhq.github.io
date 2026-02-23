@@ -23,8 +23,9 @@ body {
 
   /* text-align: right; */
 
-  max-width: 1500px;
+  /* max-width: 1500px; */
   margin: 0 auto;
+  padding: 0;
   /* This creates a 5% margin on the sides and 50px at the top/bottom */
   padding: 40px 20px;
   box-sizing: border-box; /* Crucial: makes sure padding doesn't cause horizontal scrolling */
@@ -181,57 +182,109 @@ body {
   background-color: #2a2a2a;
   padding: 4rem 2rem;
   width: 100%;
-  margin-top: 3rem;
+  box-sizing: border-box;
 }
 
 .products-grid {
-  display: flex;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 1.2rem;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1rem;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  flex-wrap: nowrap;
 }
 
 .product-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 2rem;
   display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 280px;
-  height: fit-content;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  flex-direction: column; /* Stack header top, blurb bottom */
+  min-height: 400px;
+  padding: 24px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+
+  background-color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.5s ease;
+  cursor: pointer;
 }
 
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+/* The Background Image Logic */
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  transition: transform box-shadow 0.5s ease;
+}
+.product-card:hover::before {
+  transform: scale(1.05); /* Subtle zoom effect like Udara's site */
 }
 
-.tesseract-card {
-  background: linear-gradient(135deg, #A161EA 0%, rgba(161, 97, 234, 0.1) 100%);
+/* ---------------------- */
+
+
+/* Gradient Overlay to make text pop */
+.product-card::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
+  z-index: 1;
 }
 
-.prism-card {
-  background: linear-gradient(135deg, #64FA53 0%, rgba(100, 250, 83, 0.1) 100%);
-}
-
-.niko-card {
-  background: linear-gradient(135deg, #4169E1 0%, rgba(65, 105, 225, 0.1) 100%);
+/* Content Styling */
+.card-description, .card-buttons {
+  position: relative;
+  z-index: 2; /* Keeps text above the image and overlay */
+  text-align: left; /* Align left to match Udara's style */
 }
 
 .card-header {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  text-align: right;
+  flex-direction: row; /* Icon left, Text right */
+  align-items: center;
+  justify-content: flex-start; /* Align to the left */
+  gap: 12px;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+/* -------------------- */
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.5s ease;
+}
+
+.tesseract-card {
+  /* background: linear-gradient(135deg, #A161EA 0%, rgba(161, 97, 234, 0.1) 100%); */
+  background-color: #0369a1;
+}
+
+.prism-card {
+  /* background: linear-gradient(135deg, #64FA53 0%, rgba(100, 250, 83, 0.1) 100%); */
+  background-color: #41c532;
+}
+
+.niko-card {
+  /* background: linear-gradient(135deg, #4169E1 0%, rgba(65, 105, 225, 0.1) 100%); */
+  background-color: #3860d8;
+}
+
+.secret-card {
+  background-color: #000000;
+}
+
+
+.card-header {
+  flex-direction: row; /* Icon next to title */
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
 }
 
 .card-icon-container {
@@ -252,21 +305,25 @@ body {
 
 .card-title {
   font-family: 'Instrument Serif', serif;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 400;
   margin: 0;
-  color: #000000;
+  color: #ffffff;
   text-transform: lowercase;
 }
 
 .card-description {
   font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
+
   font-weight: 400;
-  color: #333333;
-  margin: 0 0 1.5rem 0;
-  line-height: 1.5;
+  color: #ffffff;
+  opacity: 0.9;
   text-transform: lowercase;
+
+  margin-top: auto;
+  line-height: 1.4;
+  font-size: 1rem;
+  text-align: left;
 }
 
 .card-buttons {
@@ -277,37 +334,31 @@ body {
 }
 
 .btn-card {
-  padding: 0.6rem 1.1rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  display: inline-block;
-  transition: transform 160ms ease, filter 160ms ease;
-  text-transform: lowercase;
-  border: none;
-  cursor: pointer;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.85rem;
+  backdrop-filter: blur(5px);
 }
 
 .btn-download-card {
   background-color: #2563eb;
   color: #ffffff;
-  flex: 1;
 }
 
 .btn-download-card:hover {
-  filter: brightness(0.95);
+  background-color: rgb(64, 124, 255);
   transform: translateY(-1px);
 }
 
 .btn-learn-card {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgb(231, 231, 231);
   color: #000000;
-  flex: 1;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255,);
 }
 
 .btn-learn-card:hover {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255);
   transform: translateY(-1px);
 }
