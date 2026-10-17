@@ -172,6 +172,20 @@ body > #nav-placeholder > .nitrox-nav {
     max-width: 560px;
 }
 
+/* PT 2 IDK - 10.17.2026 04:41pm *
+/* Product Descriptions */
+.yap {
+    margin-bottom: 2.5rem;
+}
+
+.yap p {
+    font-family: var(--sans-serif);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin: 0 0 1.25rem 0;
+    max-width: 560px;
+}
+
 .product-name {
     font-family: var(--serif);
     font-size: 1.15rem;
