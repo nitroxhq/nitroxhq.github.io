@@ -1,11 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Geist+Mono:wght@100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Geist+Mono:wght@100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');*/
 
+/* LOCAL FONTS (WORKS OFFLINE~) */
+@font-face {
+  font-family: 'Instrument Serif';
+  font-weight: 400;
+  src: url('assets/fonts/instrument-serif/InstrumentSerif-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-weight: 400;
+  font-style: italic;
+  src: url('assets/fonts/instrument-serif/InstrumentSerif-Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400;
+  src: url('assets/fonts/inter/Inter-Regular.woff2') format('woff2');
+
+@font-face {
+font-family: 'Instrument Sans';
+font-weight: 400;
+src: url('assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.woff2') format('woff2');
+}
+
+}
 :root {
     --serif: 'Instrument Serif', serif;
     --sans-serif: 'Inter', sans-serif;
-    --mono: 'Geist Mono', monospace;
+    /*--mono: 'Geist Mono', monospace;*/
     --sans: 'Instrument Sans', sans-serif;
-    --mond: 'EB Garamond', serif;
+    /*--mond: 'EB Garamond', serif;*/
 
     --bg-blue: #3232FF;
     --text-white: #ffffff;
@@ -27,6 +53,7 @@ body {
 
 a {
     text-decoration: none;
+    color: #ffffff;
 }
 
 .page {
@@ -35,6 +62,118 @@ a {
     padding: 40px 24px;
     box-sizing: border-box;
 }
+
+h1, h2, h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    color: #ffffff;
+}
+p {
+    font-family: var(--sans-serif);
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    line-height: 1.5;       
+}
+
+
+
+
+
+
+
+
+
+/*body.center-msg {
+    margin: 0;
+    padding: 40px 24px;
+    background-color: var(--bg-blue);
+    color: #ffffff;
+    font-family: var(--sans-serif);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}*/
+h1.center-msg {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 4rem;
+    margin: 0 0 1rem 0;
+}
+p.center-msg {
+    font-family: var(--sans-serif);
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+a.button {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.65rem 1.3rem;
+    background-color: rgba(255,255,255,0.12);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 160ms ease;
+}
+a.button:hover {
+    background-color: rgba(255,255,255,0.22);
+}
+
+
+
+
+
+
+
+
+
+
+/* formatting */
+.underline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.italic {
+    font-style: italic;
+}
+.serif {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+}
+.sans-serif {
+    font-family: var(--sans-serif);
+    font-size: 1.3rem;
+}
+.center-msg {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Navigation */
 .nitrox-nav {
@@ -83,13 +222,15 @@ body > #nav-placeholder > .nitrox-nav {
 
 .nav-link:hover {
     opacity: 1;
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.17);
     transform: translateY(-1px);
 }
 
 .nav-link.active {
     opacity: 1;
-    background-color: rgba(255, 255, 255, 0.18);
+    /*background-color: rgba(255, 255, 255, 0.18);*/
+    color: var(--bg-blue);
+    background-color: rgba(255, 255, 255, 1);
 }
 
 .nav-brand {
@@ -126,6 +267,48 @@ body > #nav-placeholder > .nitrox-nav {
     display: block;
 }
 
+/* more */
+/* Tooltip for navbar links - appears on hover */
+/* idk why its not working - 10.18.2026*/
+.nav-bsod:hover::after {
+  content: "bsod";
+  position: absolute;
+  bottom: 100%; /* Position below the link */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center the text */
+  background-color: #000;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-family: var(--serif);
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* Show tooltip when hovering */
+.nav-bsod:hover::after,
+.nav-bsod:hover::after:hover {
+  opacity: 1;
+}
+
+/* Hide tooltip when mouse leaves */
+.nav-bsod:not(:hover)::after {
+  display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
 /* Hero */
 .hero {
     display: flex;
@@ -150,14 +333,25 @@ body > #nav-placeholder > .nitrox-nav {
     max-width: 600px;
 }
 
-.underline {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
 
-.italic {
-    font-style: italic;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Product Descriptions */
 .product-descriptions {
@@ -171,6 +365,7 @@ body > #nav-placeholder > .nitrox-nav {
     margin: 0 0 1.25rem 0;
     max-width: 560px;
 }
+
 
 /* PT 2 IDK - 10.17.2026 04:41pm *
 /* Product Descriptions */
@@ -428,12 +623,3 @@ body > #nav-placeholder > .nitrox-nav {
     height: 100%;
 }
 
-h1, h2, h3 {
-    font-family: var(--serif);
-    font-weight: 400;
-    color: #ffffff;
-}
-
-a {
-    color: #ffffff;
-}
