@@ -1,6 +1,6 @@
 /*@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Geist+Mono:wght@100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');*/
 
-/* LOCAL FONTS (WORKS OFFLINE~) */
+/* local fonts!*/
 @font-face {
   font-family: 'Instrument Serif';
   font-weight: 400;
@@ -18,6 +18,7 @@
   font-family: 'Inter';
   font-weight: 400;
   src: url('assets/fonts/inter/Inter-Regular.woff2') format('woff2');
+}
 
 @font-face {
 font-family: 'Instrument Sans';
@@ -25,7 +26,7 @@ font-weight: 400;
 src: url('assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.woff2') format('woff2');
 }
 
-}
+
 :root {
     --serif: 'Instrument Serif', serif;
     --sans-serif: 'Inter', sans-serif;
