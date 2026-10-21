@@ -38,33 +38,6 @@
         <a href="./index.html">press any key to continue</a>
     </footer>
 
-    <script>
-        (function () {
-            var percent = document.getElementById('bsod-percent');
-            var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            if (percent) {
-                if (calm) {
-                    percent.textContent = '100';
-                } else {
-                    var value = 0;
-                    var step = function () {
-                        value = Math.min(100, value + 1 + Math.floor(Math.random() * 7));
-                        percent.textContent = String(value);
-                        if (value < 100) {
-                            window.setTimeout(step, 450 + Math.random() * 1100);
-                        }
-                    };
-                    window.setTimeout(step, 1200);
-                }
-            }
-
-            document.addEventListener('keydown', function (event) {
-                if (event.metaKey || event.ctrlKey || event.altKey) return;
-                if (event.key === 'Tab' || event.key === 'Shift') return;
-                window.location.href = './index.html';
-            });
-        })();
-    </script>
+    <script src="bsod-script.js"></script>
 </body>
 </html>
