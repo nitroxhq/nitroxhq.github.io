@@ -1,0 +1,11 @@
+/* the :3 page theme layer.
+ *
+ * win.css holds the full Windows BSOD layout. This file only re-points the
+ * main variables so the page matches the rest of the site. Want the authentic
+ * Microsoft blue back? Set --win-bg back to #0078D7 (or drop this override).
+ */
+
+:root {
+    /* same blue as the rest of the site (styles.css --bg-blue) */
+    --win-bg: #3232FF;
+}

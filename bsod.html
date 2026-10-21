@@ -3,26 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nitrox is fixing technology.</title>
-    <!--<link rel="preconnect" href="https://fonts.googleapis.com">-->
-    <!--<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>-->
-    <!--<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Geist+Mono:wght@100..900&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">-->
-    <link rel="stylesheet" href="styles.css">
+    <title>:3 — nitrox is fixing technology.</title>
+    <meta name="description" content="your website ran into a problem and needs to restart.">
+    <meta name="theme-color" content="#3232FF">
+    <meta name="robots" content="noindex">
+
+    <link rel="stylesheet" href="win.css">
+    <link rel="stylesheet" href="bsod-styles.css">
     <link rel="stylesheet" href="assets/fonts/inter/inter.css">
 
     <link rel="icon" type="image/svg+xml" href="./assets/white-logo-svg.svg">
     <link rel="icon" type="image/png" href="./assets/white-logo-png.png">
 </head>
 <body>
-  <main class="page">
-      <!-- Navigation -->
-      <div id="nav-placeholder"></div>
+    <main class="bsod-screen">
+        <div class="bsod-face" aria-hidden="true">:3</div>
 
-      <h1 class="sans-serif">:3</h1>
-      <section class="yap">
-        <p>nitrox is an independent technology studio building better ways to interact with technology. we're here to make technology fun and human again.</p>
-      </section>
-  </main>
-  <script src="script.js"></script>
+        <div class="bsod-copy">
+            <p class="bsod-lead">your website ran into a problem and needs to restart. we're just collecting some error info, and then we'll restart for you.</p>
+            <p class="bsod-progress"><span id="bsod-percent">0</span>% complete</p>
+        </div>
+
+        <div class="bsod-details">
+            <img class="bsod-qr" src="./assets/bsod-qr.svg" alt="" width="116" height="116">
+            <div class="bsod-support">
+                <p>for more information about this issue and possible fixes, visit <a href="./index.html">nitroxhq.github.io</a></p>
+                <p>if you call a support person, give them this info:<br>stop code: <span class="bsod-stopcode">CRITICAL_SMILE_UNDERFLOW</span></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bsod-footer">
+        <span>nitrox is <em>fixing</em> technology.</span>
+        <a href="./index.html">press any key to continue</a>
+    </footer>
+
+    <script>
+        (function () {
+            var percent = document.getElementById('bsod-percent');
+            var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (percent) {
+                if (calm) {
+                    percent.textContent = '100';
+                } else {
+                    var value = 0;
+                    var step = function () {
+                        value = Math.min(100, value + 1 + Math.floor(Math.random() * 7));
+                        percent.textContent = String(value);
+                        if (value < 100) {
+                            window.setTimeout(step, 450 + Math.random() * 1100);
+                        }
+                    };
+                    window.setTimeout(step, 1200);
+                }
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.metaKey || event.ctrlKey || event.altKey) return;
+                if (event.key === 'Tab' || event.key === 'Shift') return;
+                window.location.href = './index.html';
+            });
+        })();
+    </script>
 </body>
 </html>

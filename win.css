@@ -1,0 +1,175 @@
+/* Windows-version blue screen of death theme for the :3 page.
+ *
+ * This is the full, authentic Microsoft-blue setup, kept as its own theme so
+ * it can be reused or restored. Colors live in the variables below — override
+ * any of them in a later stylesheet to re-theme it (see bsod-styles.css).
+ */
+
+:root {
+    --win-bg: #0078D7;           /* the real blue screen blue */
+    --win-fg: #ffffff;
+    --win-muted: rgba(255, 255, 255, 0.82);
+    --win-font: 'InterVariable', 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(28px, 8vh, 88px) clamp(24px, 10vw, 148px) 0;
+    background-color: var(--win-bg);
+    color: var(--win-fg);
+    font-family: var(--win-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+.bsod-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 880px;
+    padding-bottom: clamp(24px, 4vh, 48px);
+}
+
+.bsod-face {
+    margin: 0 0 clamp(20px, 4vh, 40px);
+    font-family: var(--win-font);
+    font-size: clamp(84px, 13vh, 148px);
+    font-weight: 200;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--win-fg);
+}
+
+.bsod-copy {
+    max-width: 720px;
+}
+
+.bsod-lead {
+    margin: 0 0 clamp(18px, 3vh, 28px);
+    font-size: clamp(19px, 2.1vw, 30px);
+    font-weight: 300;
+    line-height: 1.35;
+    text-wrap: pretty;
+}
+
+.bsod-progress {
+    margin: 0;
+    font-size: clamp(19px, 2.1vw, 30px);
+    font-weight: 300;
+    line-height: 1.35;
+    font-variant-numeric: tabular-nums;
+}
+
+.bsod-details {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(16px, 2.2vw, 28px);
+    margin-top: clamp(32px, 7vh, 72px);
+}
+
+.bsod-qr {
+    width: clamp(80px, 9vw, 116px);
+    height: auto;
+    display: block;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-radius: 2px;
+    image-rendering: pixelated;
+}
+
+.bsod-support {
+    max-width: 46ch;
+    font-size: clamp(13px, 1.05vw, 15px);
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--win-muted);
+}
+
+.bsod-support p {
+    margin: 0 0 0.9em;
+}
+
+.bsod-support p:last-child {
+    margin-bottom: 0;
+}
+
+.bsod-support a {
+    color: var(--win-fg);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.bsod-support a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.bsod-stopcode {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--win-fg);
+}
+
+.bsod-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 24px;
+    padding: 0 0 clamp(22px, 5vh, 40px);
+    font-size: clamp(12px, 0.95vw, 13px);
+    color: var(--win-muted);
+}
+
+.bsod-footer a {
+    color: var(--win-fg);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding-bottom: 1px;
+    opacity: 0.85;
+    transition: opacity 160ms ease, border-color 160ms ease;
+}
+
+.bsod-footer a:hover {
+    opacity: 1;
+    border-color: var(--win-fg);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--win-fg);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+@media (max-width: 560px) {
+    .bsod-details {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .bsod-qr {
+        width: 84px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bsod-footer a {
+        transition: none;
+    }
+}
