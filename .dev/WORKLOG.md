@@ -78,7 +78,8 @@ homepage (now `og-index.html`). Then merge `dev` into `main`. The site still run
   blue text, lift + shadow on hover); added
   `position: relative` to `.nav-bsod` so its tooltip anchors to the link.
 - **`navbar.html`**: brandmark is now blue logo + "nitrox" wordmark in `var(--sans)`; content centered;
-  added the `community` link; links use `.nav-buttons`.
+  the wordmark shares the logo's hover animation (`opacity` + 1px lift); added the `community` link;
+  links use `.nav-buttons`.
 - **`script.js`**: added the `NITROX_LINKS` object (discord, github, community, join) and `applyLinks()`,
   which fills `href` on any `[data-link]` element and adds `target="_blank"` / `rel="noopener noreferrer"`
   for external URLs; active-page detection now targets `.nav-buttons`.

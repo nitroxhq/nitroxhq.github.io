@@ -256,6 +256,13 @@ body > #nav-placeholder > .nitrox-nav {
     font-weight: 600;
     color: var(--text-black);
     letter-spacing: -0.01em;
+    display: inline-block;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-brand-text:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
 }
 
 .nav-logo-link {
