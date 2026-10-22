@@ -34,8 +34,11 @@ src: url('assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.wof
     --sans: 'Instrument Sans', sans-serif;
     /*--mond: 'EB Garamond', serif;*/
 
+    /* colors */
     --bg-blue: #3232FF;
     --text-white: #ffffff;
+    --text-black: #000000;
+    --dark-mode: #151515;
 }
 
 html, body {
@@ -177,26 +180,35 @@ a.button:hover {
 
 
 /* Navigation */
+/* 10.22.2026 — floating white pill navbar, centered, ~50vw wide */
 .nitrox-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    margin-bottom: 3rem;
+    gap: 2rem;
+    width: 50vw;
+    max-width: calc(100vw - 32px);
+    margin: 28px auto 3rem auto;
+    padding: 10px 11px;
     box-sizing: border-box;
+    background-color: var(--text-white);
+    border-radius: 100vmax;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    position: relative;
+    z-index: 10;
 }
 
+/* legacy hook — kept so an older navbar markup still lands in the same place */
 body > .nitrox-nav,
 body > #nav-placeholder > .nitrox-nav {
-    max-width: 900px;
-    margin: 0 auto 3rem auto;
-    padding: 32px 24px 0 24px;
+    max-width: calc(100vw - 32px);
+    margin: 28px auto 3rem auto;
 }
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 0.35rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -208,42 +220,41 @@ body > #nav-placeholder > .nitrox-nav {
     padding: 0;
 }
 
-.nav-link {
+.nav-buttons {
     font-family: var(--sans);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--text-black);
     text-decoration: none;
-    padding: 0.35rem 0.75rem;
+    padding: 0.35rem 0.8rem;
     border-radius: 999px;
-    opacity: 0.88;
     display: inline-block;
-    transition: opacity 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
+    transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
 }
 
-.nav-link:hover {
-    opacity: 1;
-    background-color: rgba(255, 255, 255, 0.17);
+.nav-buttons:hover {
+    background-color: rgba(0, 0, 0, 0.06);
     transform: translateY(-1px);
 }
 
-.nav-link.active {
-    opacity: 1;
-    /*background-color: rgba(255, 255, 255, 0.18);*/
+.nav-buttons.active {
     color: var(--bg-blue);
-    background-color: rgba(255, 255, 255, 1);
+    background-color: transparent;
 }
 
 .nav-brand {
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
 .nav-brand-text {
     font-family: var(--sans);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--text-black);
+    letter-spacing: -0.01em;
 }
 
 .nav-logo-link {
@@ -263,14 +274,37 @@ body > #nav-placeholder > .nitrox-nav {
 }
 
 .nav-logo-img {
-    width: 28px;
+    width: 24px;
     height: auto;
     display: block;
 }
 
+/* small screens: the pill goes edge to edge instead of 50vw */
+@media (max-width: 720px) {
+    .nitrox-nav {
+        width: calc(100vw - 24px);
+        gap: 1rem;
+        padding: 8px 6px;
+    }
+
+    .nav-buttons {
+        font-size: 0.95rem;
+        padding: 0.3rem 0.55rem;
+    }
+
+    .nav-brand-text {
+        font-size: 1.05rem;
+    }
+}
+
 /* more */
 /* Tooltip for navbar links - appears on hover */
-/* idk why its not working - 10.18.2026*/
+/* idk why its not working - 10.18.2026 */
+/* fix 10.22.2026: the link itself needs to be the positioning context */
+.nav-bsod {
+  position: relative;
+}
+
 .nav-bsod:hover::after {
   content: "bsod";
   position: absolute;
@@ -405,6 +439,102 @@ body > #nav-placeholder > .nitrox-nav {
     line-height: 1.65;
     margin: 0;
     max-width: 560px;
+}
+
+/* Community — big buttons (10.22.2026) */
+.big-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 560px;
+    margin: 0 0 3rem 0;
+}
+
+.big-button {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding: 1.1rem 1.4rem;
+    border-radius: 28px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: var(--text-white);
+    text-align: left;
+    transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.big-button:hover {
+    background-color: rgba(255, 255, 255, 0.17);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.big-button-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: block;
+}
+
+.big-button-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.big-button-title {
+    font-family: var(--sans);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.big-button-sub {
+    font-family: var(--sans-serif);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0.82;
+}
+
+.big-button-arrow {
+    margin-left: auto;
+    padding-left: 0.75rem;
+    font-family: var(--sans);
+    font-size: 1.15rem;
+    opacity: 0.7;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.big-button:hover .big-button-arrow {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* Join us CTA */
+.join-us {
+    margin-bottom: 3rem;
+}
+
+.join-us-button {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.9rem 2rem;
+    border-radius: 100vmax;
+    background-color: var(--dark-mode);
+    color: var(--bg-blue);
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.join-us-button:hover {
+    background-color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
 /* Footer */
