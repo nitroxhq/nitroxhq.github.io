@@ -69,11 +69,13 @@ homepage (now `og-index.html`). Then merge `dev` into `main`. The site still run
   "liquid glass" app icons. Superellipse (n=5) mask, white glass gradient, specular highlight, rim light,
   soft ambient shadow, brand glyph centered.
 - **`assets/blue-logo-svg.svg`** (new): recolored copy of `white-logo-svg.svg` for the white navbar pill.
-- **`styles.css`**: added a `/* colors */` block in `:root` (`--text-black`, `--dark-mode: #151515`,
-  kept `--bg-blue`, `--text-white`); rebuilt `.nitrox-nav` as a centered white pill (`50vw`,
+- **`styles.css`**: added a `/* colors */` block in `:root` (`--white`, `--text-black`,
+  `--dark-mode: #151515`, kept `--bg-blue`, and `--text-white` now aliases `--white`); rebuilt
+  `.nitrox-nav` as a centered white pill (`50vw`,
   `border-radius: 100vmax`, bottom shadow); added `.nav-buttons` / `.nav-buttons:hover` /
   `.nav-buttons.active` (black text, nitrox blue when active); added `.big-buttons`, `.big-button`,
-  `-icon`, `-text`, `-title`, `-sub`, `-arrow`, and `.join-us` / `.join-us-button`; added
+  `-icon`, `-text`, `-title`, `-sub`, `-arrow`, and `.join-us` / `.join-us-button` (white fill, nitrox
+  blue text, lift + shadow on hover); added
   `position: relative` to `.nav-bsod` so its tooltip anchors to the link.
 - **`navbar.html`**: brandmark is now blue logo + "nitrox" wordmark in `var(--sans)`; content centered;
   added the `community` link; links use `.nav-buttons`.

@@ -36,7 +36,8 @@ src: url('assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.wof
 
     /* colors */
     --bg-blue: #3232FF;
-    --text-white: #ffffff;
+    --white: #ffffff;
+    --text-white: var(--white);
     --text-black: #000000;
     --dark-mode: #151515;
 }
@@ -191,7 +192,7 @@ a.button:hover {
     margin: 28px auto 3rem auto;
     padding: 10px 11px;
     box-sizing: border-box;
-    background-color: var(--text-white);
+    background-color: var(--white);
     border-radius: 100vmax;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
     position: relative;
@@ -522,7 +523,7 @@ body > #nav-placeholder > .nitrox-nav {
     margin-top: 0.5rem;
     padding: 0.9rem 2rem;
     border-radius: 100vmax;
-    background-color: var(--dark-mode);
+    background-color: var(--white);
     color: var(--bg-blue);
     font-family: var(--sans);
     font-size: 1rem;
@@ -532,7 +533,7 @@ body > #nav-placeholder > .nitrox-nav {
 }
 
 .join-us-button:hover {
-    background-color: #000000;
+    background-color: var(--white);
     transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
