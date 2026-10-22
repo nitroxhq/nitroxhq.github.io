@@ -3,10 +3,13 @@
 Detailed worklog for this repo. Lives in `.dev/` when the repo has no worklog yet.
 
 This file is the long-form record: what was asked, what was built, how it was checked, and what a human
-actually learned along the way. The glanceable timeline stays in
-`~/Documents/(01)-dev-git/@projects/projects-worklog.md`, and per-project deep dives stay in
-`~/Documents/(01)-dev-git/@projects/<project>/README.md`. Those two are the source of truth for the
-`project-docs` / `worklog` skills; this file is the in-repo detail for the same task.
+actually learned along the way. It is owned by the `dev-worklog` skill; longer design notes live in
+`.dev/docs/` under the `dev-project-docs` skill.
+
+The glanceable timeline at `~/Documents/(01)-dev-git/@projects/projects-worklog.md` and the per-project
+deep dives at `~/Documents/(01)-dev-git/@projects/<project>/README.md` are for maintenance and machine-level
+work, and are owned by the `worklog` / `project-docs` skills. Development work in this repo is logged here,
+not there.
 
 Newest entries first. One entry per task or session. Every entry starts with an **Overview**.
 
