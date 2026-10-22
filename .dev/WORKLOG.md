@@ -15,6 +15,43 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.22.2026 04:31pm CDT — Rename `og-index.html` to `mission.html`, link it in the navbar
+
+### Overview
+
+The old homepage archive needed a name that describes what it is, and a place in the navbar. It is now
+`mission.html`, linked between `community` and `about`.
+
+### What changed
+
+- **`og-index.html` → `mission.html`** via `git mv`, so rename history is preserved.
+- **`navbar.html`**: added `mission` between `community` and `about`. All links still use `.nav-buttons`,
+  so active-state detection picks it up with no JS change.
+- **No link sweep**: nothing else referenced `og-index.html`, confirmed by grep before the rename.
+
+### Decisions
+
+- Kept the navbar `home` → `./index.html` link untouched; the new homepage is still landing in another
+  thread, and pointing `home` at `mission.html` would make the archive the default landing page.
+
+### Validation
+
+- `grep -rn og-index` over html/js/css/md returns only this worklog's history.
+- Served `http://localhost:8000/mission.html` returns `200`.
+- Not validated: `./index.html` still 404s locally, as expected until the redesign lands.
+
+### Subtasks
+
+- [x] Rename the file with `git mv`
+- [x] Add the `mission` navbar link after `community`
+- [ ] Point `home` at the real `index.html` once it exists
+
+### Follow-up
+
+- Mission page is reachable but not the default route. `http://localhost:8000/` still lists files.
+
+---
+
 ## 10.22.2026 02:11–04:20pm — Community page, pill navbar, join us CTA
 
 ### Overview
