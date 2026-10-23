@@ -28,7 +28,7 @@
 
 ## Tesseract: intended scope vs. implementation
 
-The intended product spans notes, tasks, captures, calendar, whiteboards, time tracking, databases, flashcards, goal/habit systems, media-later workflows, and connected object-based information. Details are in `TESSERACT-REQUIREMENTS.md`.
+The intended product spans notes, tasks, captures, calendar, whiteboards, time tracking, databases, flashcards, goal/habit systems, media-later workflows, and connected object-based information. Details are in `06-tesseract-docs.md`.
 
 The file-first/offline-first direction is current. A particular stack or schema is not yet an established implementation. Planning sources propose React, TypeScript, Vite, Tailwind, Tauri 2, Markdown/YAML content, JSON layout manifests, and browser/native storage adapters. Treat these as proposals until repository evidence and tests confirm them.
 
@@ -44,11 +44,11 @@ Older workspace-inspection material mentions `index.html`, `styles.css`, `script
 - [ ] Record reproducible build/test results, target platforms, and known failures when available.
 
 ### P1 — reconcile product requirements
-- [ ] Preserve the full requirements inventory in `TESSERACT-REQUIREMENTS.md`; compare each item with implementation only after repositories are accessible.
+- [ ] Preserve the full requirements inventory in `06-tesseract-docs.md`; compare each item with implementation only after repositories are accessible.
 - [ ] Assign feature phases only when deliberately prioritized. Leave the rest **phase unassigned**.
 - [ ] Reconcile older object-based/tag-based organization, folders, and auto-tagging with the current file/offline-first direction without dropping the user capability.
 - [ ] Determine how jots, daily notes, journaling, captures, tasks, and general notes relate in the product model.
-- [ ] Resolve the intended boundaries between Tesseract, Prism, Photon, Airwaves/AirWave, and older app names only where evidence supports a mapping.
+- [ ] Resolve the intended boundaries between Tesseract, Prism, Astrid, Airwaves/AirWave, and older app names only where evidence supports a mapping.
 
 ### P1 — decide architecture trade-offs
 - [ ] Decide whether Tauri 2 + React/TypeScript/Vite/Tailwind is the chosen target stack or still a proposal.
@@ -77,7 +77,7 @@ Older workspace-inspection material mentions `index.html`, `styles.css`, `script
 - [ ] Compare the accessible Craft documents with the latest owner decisions and preserve useful non-superseded older material.
 - [ ] Review remaining linked Notion pages where they may contain unique source material.
 - [ ] Add source paths/dates to requirements where helpful; distinguish direct owner direction from quick AI-generated proposals.
-- [ ] Update `MERGE-NOTES.md` as source access improves.
+- [ ] Update `05-merge-notes.md` as source access improves.
 
 ## Non-goals of this status file
 

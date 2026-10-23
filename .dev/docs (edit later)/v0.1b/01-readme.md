@@ -1,6 +1,6 @@
 # nitrox — canonical working documentation (v0.1)
 
-> **Status:** Canonical working draft, 2026-10-19. This set consolidates accessible planning sources; it is not exhaustive, and it does not claim that a functioning product exists.
+> **Status:** Canonical working draft, 2026-10-19; updated 2026-10-22 with the docs-meta format and the Einstein concept. This set consolidates accessible planning sources; it is not exhaustive, and it does not claim that a functioning product exists.
 
 ## Overview
 
@@ -35,13 +35,27 @@ These are **project concepts and intended directions**, not shipped products. No
 | **Tesseract** | A portable, file/offline-first productivity and creativity environment connecting notes, tasks, capture, time, calendar, whiteboards, databases, and related workflows | Core app focus; all functionality planned |
 | **Prism** | Intentional RSS, read-later, and social/feed experience | Planning concept; delivery phase unassigned |
 | **Niko** | AI coworker / assistant concept | Planning concept; exact scope and relationship to older “NikoBot” name unresolved |
-| **Photon** | Browser control and workflows | Planning concept; delivery phase unassigned |
+| **Astrid** | Browser control and workflows | Planning concept; delivery phase unassigned |
 | **Airwaves** | Music experience | Planning concept; relationship to older “AirWave” name unresolved |
 | **Orchid** | Local-first design tool | Planning concept |
 | **Blueberry** | Digital audio workstation (DAW) concept | Planning concept |
 | **Cobalt** | Text editor / IDE concept | Planning concept |
 
-This is a practical near-term software list, not a definitive list of every historic name or long-term ambition. See [MERGE-NOTES.md](MERGE-NOTES.md) for aliases, older concepts, and unresolved mappings.
+This is a practical near-term software list, not a definitive list of every historic name or long-term ambition. See [05-merge-notes.md](05-merge-notes.md) for aliases, older concepts, and unresolved mappings.
+
+## App workbench
+
+The workbench is for **smaller tools, extensions, and experiments** that are not (yet) part of the core app suite. It exists so small work can be visible without being presented as a flagship product, and so the main portfolio does not overclaim.
+
+Workbench items are still concepts unless a page is explicitly marked as reachable. “Page exists” is not the same as “shipped”; “coming soon” is not a release date.
+
+| Name | Intended direction | Status |
+|---|---|---|
+| **Tesseract Tab Manager** | Cross-browser extension for tab overload; companion tool to Tesseract, with saved/stashed tab sets and focus-friendly tab handling | Public page exists at `/tesseract/tab-manager.html`, labeled “coming soon”; no verified release |
+| **Toolbox** | A drawer of small utilities: file, syntax, time, and unit converters, growing into page-level control in the spirit of Zen’s boosts; the bare bones of the Astrid browser direction | Exploring; no page |
+| **Einstein** | Grade assistant that explains grade changes, supports a what-if lab, and helps prioritize work; HAC import plus manual entry | Early concept from a Figma design review; no page; see [07-einstein-docs.md](07-einstein-docs.md) |
+
+Adding an item to the workbench does not assign a delivery phase. Promote an item to the main portfolio only when the owner decides it is a core-suite product.
 
 ## Tesseract at a glance
 
@@ -56,7 +70,7 @@ Tesseract is intended to unify creative and productive work without forcing all 
 - People/contact context and references between related objects.
 - Cross-platform, offline-first, file-first data ownership and optional synchronization.
 
-This is intended scope, not an MVP promise. The full source-documented requirement inventory is in [TESSERACT-REQUIREMENTS.md](TESSERACT-REQUIREMENTS.md). Feature delivery phase is **unassigned** unless explicitly stated.
+This is intended scope, not an MVP promise. The full source-documented requirement inventory is in [06-tesseract-docs.md](06-tesseract-docs.md). Feature delivery phase is **unassigned** unless explicitly stated.
 
 ## Design and architecture direction
 
@@ -77,7 +91,7 @@ This parent/product distinction is a chosen organizing principle. Exact palette,
 - **Clear separation:** user capability, implementation choice, and delivery phase are distinct.
 - **Honest status:** a plan, scaffold, repository, or deployment artifact is not proof of working product behavior.
 
-The current Tesseract technical proposal suggests Markdown with YAML frontmatter for content, JSON manifests for spatial layouts, a platform abstraction layer, bundled assets, and native/browser storage adapters. These are proposed implementation choices, not verified architecture. See [DESIGN.md](DESIGN.md) and [STATUS.md](STATUS.md).
+The current Tesseract technical proposal suggests Markdown with YAML frontmatter for content, JSON manifests for spatial layouts, a platform abstraction layer, bundled assets, and native/browser storage adapters. These are proposed implementation choices, not verified architecture. See [02-design.md](02-design.md) and [03-status.md](03-status.md).
 
 ## Provisional monetization direction
 
@@ -89,15 +103,18 @@ No prices, entitlements, service commitments, or compliance claims are finalized
 | **Paid / Premium** | May include no ads across Nitrox and optional Nitrox-hosted storage or other premium conveniences | Price, storage allowance, feature allocation, and operating costs |
 | **Business / Nonprofit** | May add organizational capabilities, compliance-related offerings, and Nitrox-hosted SSO | Eligibility, pricing, administration features, support, standards, validation, and obligations |
 
-Self-hosted SSO should be available without a paid feature gate. This does **not** mean running an identity provider or its supporting infrastructure is cost-free. See [STATUS.md](STATUS.md) and [MERGE-NOTES.md](MERGE-NOTES.md).
+Self-hosted SSO should be available without a paid feature gate. This does **not** mean running an identity provider or its supporting infrastructure is cost-free. See [03-status.md](03-status.md) and [05-merge-notes.md](05-merge-notes.md).
 
 ## Documentation map
 
-- [STATUS.md](STATUS.md) — current truth, status labels, and actionable TODOs.
-- [DESIGN.md](DESIGN.md) — design foundation and proposed architecture.
-- [TESSERACT-REQUIREMENTS.md](TESSERACT-REQUIREMENTS.md) — source-documented feature intent and unassigned phases.
-- [INTERNAL-DEVELOPMENT.md](INTERNAL-DEVELOPMENT.md) — internal homelab, agent, and AI-assisted development workflow notes.
-- [MERGE-NOTES.md](MERGE-NOTES.md) — source inventory, historical names, conflicts, and coverage limitations.
+- [00-docs-meta.md](00-docs-meta.md) — file conventions, the app-doc format, and the Nitrox technical precedent.
+- [01-readme.md](01-readme.md) — this overview, the portfolio, and the app workbench.
+- [02-design.md](02-design.md) — design foundation and proposed architecture.
+- [03-status.md](03-status.md) — current truth, status labels, and actionable TODOs.
+- [04-internal-development.md](04-internal-development.md) — internal homelab, agent, and AI-assisted development workflow notes.
+- [05-merge-notes.md](05-merge-notes.md) — source inventory, historical names, conflicts, and coverage limitations.
+- [06-tesseract-docs.md](06-tesseract-docs.md) — Tesseract intent and feature reference.
+- [07-einstein-docs.md](07-einstein-docs.md) — Einstein intent, Q&A next steps, and feature reference.
 
 ## Source and status rule
 

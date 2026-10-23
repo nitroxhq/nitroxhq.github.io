@@ -56,7 +56,7 @@ Access failure does not establish that a repository or site is empty, broken, or
 4. Gemini-generated content is a quick pass, not a final specification. Reuse useful suggestions but do not treat omissions as decisions.
 5. Separate user capability, proposed implementation, and delivery phase.
 6. Do not invent mappings between names or claim implementation from plans, generated scaffolding, repositories, or deployment artifacts alone.
-7. Keep the detailed feature inventory in `TESSERACT-REQUIREMENTS.md`, not the public overview.
+7. Keep the detailed feature inventory in `06-tesseract-docs.md`, not the public overview.
 
 ## 4. Historical names and unresolved mappings
 
@@ -69,11 +69,11 @@ The older Notion `Nitrox` page lists or links to these names and concepts:
 - **PARADIGM** — game-philosophy concept.
 - **media** — indie content concept with values language that remains subject to the deferred public wording decision.
 - **Tomfoolery** — “making what should be” concept.
-- **Wrotebook** — appears in older Tesseract feature planning for notes, capture, object-based organization, media lists, and productivity. Relationship to Tesseract is unresolved; its feature intent is preserved in `TESSERACT-REQUIREMENTS.md`, not listed as a separate current product.
+- **Wrotebook** — appears in older Tesseract feature planning for notes, capture, object-based organization, media lists, and productivity. Relationship to Tesseract is unresolved; its feature intent is preserved in `06-tesseract-docs.md`, not listed as a separate current product.
 - **Platter** — appears in older material around escaping information overload and may relate to saved content/feed workflows; mapping unresolved.
-- **Astrox** — older software concept; mapping to Photon or any other current name unresolved.
+- **Astrox** — older software concept; mapping to Astrid or any other current name unresolved.
 - **AirWave** — older music-player name; relationship to current working name Airwaves unresolved.
-- **Orchid**, **Blueberry**, **Cobalt**, **Prism**, and **Photon** — current working-list concepts from later planning/recent conversation; all planned, not functioning products.
+- **Orchid**, **Blueberry**, **Cobalt**, **Prism**, and **Astrid** — current working-list concepts from later planning/recent conversation; all planned, not functioning products.
 - **Cosmetica** and **Library** — older app names/concepts; current mappings and status unresolved.
 
 These are retained as historical evidence and possible aliases/concepts, not asserted as distinct active products. Do not merge two names unless the owner or reliable source material confirms the mapping.

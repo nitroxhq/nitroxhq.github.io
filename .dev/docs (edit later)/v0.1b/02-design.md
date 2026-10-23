@@ -49,7 +49,7 @@ The intended experience combines a connected information system with multiple mo
 - A configurable interface rather than a single mandated layout, including exploration of sidebar and overlay behavior.
 - Integrated workflows for reading, watching, listening, playing, visiting, and other forms of consumption.
 
-See `TESSERACT-REQUIREMENTS.md` for the full feature inventory and delivery-phase status.
+See `06-tesseract-docs.md` for the full feature inventory and delivery-phase status.
 
 ## 4. Proposed content and layout model
 

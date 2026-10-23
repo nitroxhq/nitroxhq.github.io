@@ -1,15 +1,125 @@
-> previously "tesseract-requirements.md"
-# Tesseract — source-documented requirements
+> **Status:** Intended product scope and source-documented intent — not implementation evidence. No item below is a first-release promise, and no feature is confirmed as implemented. Unless explicitly prioritized later, delivery phase is **phase unassigned**.
+>
+> Previously `tesseract-requirements.md`. Format follows [00-docs-meta.md](00-docs-meta.md).
 
-> **Status:** Intended product scope, not implementation evidence. Every item below is planned intent or a source-documented use case; none is confirmed as implemented. No item is a first-release promise. Unless explicitly prioritized later, delivery phase is **phase unassigned**.
+# Tesseract — intent and feature reference
 
-## 1. Product intent
+## 0. Todos
+
+The quick Gemini pass and architecture material do not cover every requirement. Preserve these TODOs rather than silently narrowing scope.
+
+### Product model
+
+- [ ] Reconcile all requirements against the current product definition, preserving capability intent even where an older technical approach conflicts with the file/offline-first direction.
+- [ ] Add a phase assignment only when deliberately prioritized; do not infer MVP scope from the order in this document.
+- [ ] Decide the relationship between daily notes, jots, captures, documents, journaling, and tasks.
+- [ ] Define how folders, tags, object types, databases, automatic metadata, and AI-assisted tagging compose.
+- [ ] Define rediscovery, search, and “related saved content” behavior.
+- [ ] Decide which media integrations are realistic and what must remain manual.
+- [ ] Define calendar, time tracking, goals/habits, reminders, flashcards, and task scheduling behavior.
+- [ ] Decide whether contact/network features belong in Tesseract scope and what data sources would be supported.
+- [ ] Reconcile Tesseract Tabs and Astrid boundaries; do not invent a product mapping.
+
+### Technical
+
+- [ ] Decide whether Tauri 2 + React/TypeScript/Vite/Tailwind is the chosen target stack or still a proposal.
+- [ ] Define browser behavior and persistence fallback when native filesystem access is unavailable.
+- [ ] Specify the portable file format contract, schema versioning, migration strategy, and recovery behavior.
+- [ ] Reconcile whiteboard/canvas needs with portable content and layout files; select a rendering approach only after constraints are clear.
+- [ ] Confirm which fonts, icons, and dependencies must be bundled for offline rendering.
+- [ ] Decide login/account requirements and whether basic local notes can work without cloud or SSO.
+- [ ] Choose sync, selective-sync, conflict recovery, and privacy/security behavior.
+- [ ] Define what AI, if any, belongs in the user-facing product; keep internal development agents separate.
+- [ ] Validate every implementation claim with code, tests, and observable behavior before changing its status from planned to implemented.
+
+## 1. Development status and technical notes
+
+### Current state
+
+No functioning Tesseract product is verified. Repositories, generated scaffolding, planning files, and any deployed artifacts do not establish working behavior. Tesseract is the near-term core-app focus, but “core focus” describes attention, not delivery.
+
+### Proposed stack and data model
+
+These are **proposed implementation choices**, not confirmed architecture:
+
+- **Targets:** desktop/mobile native windows, plus a browser app/PWA.
+- **Stack:** Tauri 2 and a Rust core, React, TypeScript strict mode, Vite, Tailwind CSS.
+- **Boundary:** a platform abstraction between UI/domain logic and native/browser persistence. Native APIs stay behind adapters instead of being called directly from components.
+- **Content:** Markdown files with YAML frontmatter as the portable content store.
+- **Layout:** separate JSON workspace/layout manifests (for example a `.tesseract/` directory), so arrangement does not corrupt content.
+- **Browser fallback:** File System Access API/OPFS, with IndexedDB or local storage as possible fallback.
+- **Validation:** runtime validation of parsed frontmatter and strict typing at the boundaries.
+- **Assets:** bundled fonts, icons, and dependencies; no external CDN requirement for core rendering.
+- **Storage rule:** no opaque binary blobs as the sole store of user content.
+
+Example proposed frontmatter (not an approved schema):
+
+```yaml
+---
+id: "tess_<id>"
+title: "Document Title"
+type: "note"
+tags: ["tag1", "tag2"]
+created: 2026-10-16T10:00:00Z
+updated: 2026-10-16T11:00:00Z
+time_tracked: 0
+status: "todo"
+---
+```
+
+Example proposed layout manifest (not an approved schema):
+
+```json
+{
+  "canvas_id": "workspace_example",
+  "layout": [
+    { "card_id": "tess_example", "x": 0, "y": 0, "w": 4, "h": 3 }
+  ]
+}
+```
+
+The sources vary in type names and fields. The schema needs reconciliation and versioning before implementation.
+
+### Deviations from the Nitrox precedent
+
+| Area | Nitrox default | This app | Why | Status |
+|---|---|---|---|---|
+| App stack | No decided standard yet | Tauri 2 + React + TS + Vite + Tailwind proposed | Desktop plus web from one codebase | Proposed |
+| Content storage | Readable, portable formats | Markdown + YAML, JSON layout manifests | Portability and offline use | Proposed |
+
+Tesseract is currently the reference app doc and the source of much of the technical precedent. Its proposed stack is not yet a Nitrox standard; see [00-docs-meta.md](00-docs-meta.md#3-nitrox-technical-precedent).
+
+### Open technical questions
+
+Schema contracts, folder layout, sync protocol, browser/native parity, canvas implementation, and the account model all remain open. See section 0.
+
+## 2. Intent
 
 Tesseract is intended as a connected productivity **and creativity** environment: notes, tasks, capture, time, calendars, whiteboards, flashcards, databases, and related information in one flexible experience. It should reduce the burden of managing separate category-specific apps while keeping users in control of their content and workflow.
 
 The source material uses “Wrotebook” in some older feature notes when describing this same cluster of note/productivity concepts. The mapping between Wrotebook and Tesseract is unresolved; requirements are preserved here as user-capability intent, not as evidence that Wrotebook is a separate current product.
 
-## 2. Core information and capture
+## 3. Feature overview
+
+| Area | What it covers | Capabilities | Detail |
+|---|---|---|---|
+| Core information and capture | Quick capture, jots, daily notes, journaling, references | 8 | [4.1](#41-core-information-and-capture) |
+| Notes, documents, and knowledge | Documents, block editing, views, links, Markdown | 9 | [4.2](#42-notes-documents-and-knowledge) |
+| Organization, metadata, and rediscovery | Folders, tags, typed objects, properties, search | 8 | [4.3](#43-organization-metadata-and-rediscovery) |
+| Tasks, goals, schedules, and time | Tasks, habits, scheduling, calendar, time tracking | 10 | [4.4](#44-tasks-goals-schedules-and-time) |
+| Whiteboards, spatial work, and layout | Boards, canvas, layout files, sidebar, workspace | 9 | [4.5](#45-whiteboards-spatial-work-and-layout) |
+| Flashcards, study, and learning | Flashcards, generated study material, review | 4 | [4.6](#46-flashcards-study-and-learning) |
+| Media and “later” lists | Read/watch/listen/play later, media tracking | 8 | [4.7](#47-media-and-later-lists) |
+| People and contact context | People as objects, context, reminders | 6 | [4.8](#48-people-and-contact-context) |
+| Tabs and browser-adjacent workflows | Saved tabs, freeze/backup, note integration | 4 | [4.9](#49-tabs-and-browser-adjacent-workflows) |
+| UI, customization, and interaction | Panels, spaces, themes, keyboard, cross-device | 5 | [4.10](#410-ui-customization-and-everyday-interaction) |
+| Sync, storage, privacy, and AI | Local-first, offline, sync models, conflict, AI boundary | 10 | [4.11](#411-sync-storage-privacy-and-ai-boundaries) |
+
+All 81 capabilities are **phase unassigned**. The overview is a map, not a priority order.
+
+## 4. Feature reference
+
+### 4.1 Core information and capture
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -22,7 +132,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | CAP-07 | Content references | Inline references should connect tasks with other objects and AI threads or related material | Phase unassigned |
 | CAP-08 | Content portability | User content should remain readable and portable in open, non-proprietary formats where feasible | Phase unassigned |
 
-## 3. Notes, documents, and knowledge
+### 4.2 Notes, documents, and knowledge
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -36,7 +146,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | NOTE-08 | Per-document customization | Older brand/design notes request document-level customization beyond the baseline editing experience | Phase unassigned |
 | NOTE-09 | Markdown-oriented workflow | Markdown files and open formats are the preferred portable direction; exact editing model remains to be designed | Phase unassigned |
 
-## 4. Organization, metadata, and rediscovery
+### 4.3 Organization, metadata, and rediscovery
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -49,7 +159,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | ORG-07 | Search and relationships | Find information through its content, metadata, relationships, and contextual associations | Phase unassigned |
 | ORG-08 | Flexible organization | Support both folder-based and object-based approaches; do not force users to choose only one | Phase unassigned |
 
-## 5. Tasks, goals, schedules, and time
+### 4.4 Tasks, goals, schedules, and time
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -64,7 +174,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | TASK-09 | Coordination | Calendar inspiration includes finding times that work for groups; this is a use case, not a committed team-calendar priority | Phase unassigned |
 | TASK-10 | Feature panels/widgets | UI planning mentions a feature/panel area for calendar, todo, flashcards, time tracking, and a mini whiteboard | Phase unassigned |
 
-## 6. Whiteboards, spatial work, and visual layout
+### 4.5 Whiteboards, spatial work, and layout
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -78,7 +188,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | CAN-08 | Configurable sidebar | Sidebar is an important planned UI component; behavior/layout not finalized | Phase unassigned |
 | CAN-09 | Board/canvas libraries | Sources mention tldraw, Fabric.js, PixiJS, Excalidraw, and other tools as references/options, not selected dependencies | Phase unassigned |
 
-## 7. Flashcards, study, and learning
+### 4.6 Flashcards, study, and learning
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -87,7 +197,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | STUDY-03 | Interactive review | Swipe-left/right flashcard review is an inspiration, not a committed interaction design | Phase unassigned |
 | STUDY-04 | Audio/podcast-style summaries | Podcast-style summaries of information are mentioned as a possible use case | Phase unassigned |
 
-## 8. Media and “later” lists
+### 4.7 Media and “later” lists
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -100,7 +210,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | MEDIA-07 | Summaries and questions | AI summaries and asking questions about captured content are explored | Phase unassigned |
 | MEDIA-08 | Related saved content | Help users rediscover related material already in their own library, not just recommend new material from the wider internet | Phase unassigned |
 
-## 9. People and contact context
+### 4.8 People and contact context
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -111,7 +221,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | PEOPLE-05 | Relationship reminders | Reminders to catch up with people are explored | Phase unassigned |
 | PEOPLE-06 | Online creators/people | Allow saved profiles of people followed online, not only real-life contacts, and help find potential collaborators | Phase unassigned |
 
-## 10. Tabs and browser-adjacent workflows
+### 4.9 Tabs and browser-adjacent workflows
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -120,7 +230,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | TAB-03 | Connected tab and note workflow | Tabs, notes, tasks, and captures should be able to reference one another | Phase unassigned |
 | TAB-04 | Tesseract Tabs concept | UI planning includes spaces, categorized groups, an uncategorized grid, multi-select, copy, add-to-group, export, and close actions | Phase unassigned |
 
-## 11. UI, customization, and everyday interaction
+### 4.10 UI, customization, and everyday interaction
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -130,7 +240,7 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | UI-04 | Keyboard and efficient actions | UI should make organization and capture easier; exact shortcut system is not specified | Phase unassigned |
 | UI-05 | Cross-device access | Product intent spans desktop/mobile and browser targets in architecture notes; actual target support is not verified | Phase unassigned |
 
-## 12. Sync, storage, privacy, and AI boundaries
+### 4.11 Sync, storage, privacy, and AI boundaries
 
 | ID | Intended capability | Source-documented detail | Phase |
 |---|---|---|---|
@@ -144,37 +254,3 @@ The source material uses “Wrotebook” in some older feature notes when descri
 | DATA-08 | Configuration sync | Lightweight settings/plugin/workspace metadata sync is proposed separately from content storage | Phase unassigned |
 | DATA-09 | Minimal local mode | A note asks whether basic notes should remain available with very little local storage or whether email/SSO and cloud drive should be required; this remains unresolved | Phase unassigned |
 | DATA-10 | Local/cloud AI | Sources explore local models and cloud reasoning, but this mainly appears in developer workflow notes; it is not established as a user-facing feature | Phase unassigned |
-
-## 13. Technical constraints proposed by planning sources
-
-These constraints are **proposed implementation guidance**, not confirmed code:
-- Prefer human-readable Markdown with YAML frontmatter and separate layout metadata.
-- Bundle fonts, icons, and runtime dependencies; avoid external CDN requirements for core rendering.
-- Keep native APIs behind platform/storage adapters instead of calling Tauri APIs directly from React components.
-- Use strict TypeScript and runtime validation of frontmatter.
-- Consider Tauri 2 + React + TypeScript + Vite + Tailwind for desktop/mobile and browser targets.
-- Consider native filesystem access and browser File System Access API/OPFS with IndexedDB or local storage fallback.
-- Keep UI/domain logic separate from platform persistence.
-- Avoid opaque binary blobs as the only storage of user content.
-
-Exact library choices, schema contracts, folder layout, sync protocol, and canvas implementation remain open.
-
-## 14. Explicit TODOs from the audit
-
-The quick Gemini pass and architecture material do not cover every product requirement. Preserve these TODOs rather than silently narrowing scope:
-
-- [ ] Reconcile all requirements above against the current product definition, preserving capability intent even where an older technical approach conflicts with file/offline-first direction.
-- [ ] Add a phase assignment only when deliberately prioritized; do not infer MVP scope from the order in this document.
-- [ ] Decide the relationship between daily notes, jots, captures, documents, journaling, and tasks.
-- [ ] Define how folders, tags, object types, databases, automatic metadata, and AI-assisted tagging compose.
-- [ ] Define rediscovery, search, and “related saved content” behavior.
-- [ ] Decide which media integrations are realistic and what must remain manual.
-- [ ] Define calendar, time tracking, goals/habits, reminders, flashcards, and task scheduling behavior.
-- [ ] Reconcile whiteboard/canvas needs with portable content and layout files; select a rendering approach only after constraints are clear.
-- [ ] Specify browser/native storage behavior and limitations without assuming platform parity is automatic.
-- [ ] Decide login/account requirements and whether basic local notes can work without cloud or SSO.
-- [ ] Choose sync, selective-sync, conflict recovery, and privacy/security behavior.
-- [ ] Define what AI, if any, belongs in the user-facing product; keep internal development agents separate.
-- [ ] Decide whether contact/network features belong in Tesseract scope and what data sources would be supported.
-- [ ] Reconcile Tesseract Tabs and Photon boundaries; do not invent a product mapping.
-- [ ] Validate every implementation claim with code, tests, and observable behavior before changing its status from planned to implemented.
