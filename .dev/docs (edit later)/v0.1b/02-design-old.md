@@ -1,5 +1,9 @@
 # Design and architecture direction
 
+> **Superseded in part (10.23.2026):** the visual system — palette, type, geometry, components, motion,
+> voice, and app overrides — now lives in [`.dev/DESIGN.md`](../../DESIGN.md). This file remains the source
+> for product and architecture principles.
+
 > This document distinguishes owner-confirmed organizing principles from source-proposed implementation details. Nothing here asserts that a functioning interface or architecture exists.
 
 ## 1. Design principles

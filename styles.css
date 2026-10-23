@@ -114,7 +114,9 @@ a {
 .page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 40px 24px;
+    /* top padding removed 10.23.2026 — the navbar now sits outside .page on
+       non-home pages, so its own 28px top margin matches the homepage */
+    padding: 0 24px 40px;
     box-sizing: border-box;
 }
 
@@ -248,6 +250,29 @@ a.button:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
     position: relative;
     z-index: 10;
+}
+
+/* desktop: brandmark pinned left, page links dead-centre in the pill,
+   theme picker pinned right — matching the homepage (10.23.2026) */
+@media (min-width: 721px) {
+    .nitrox-nav {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+    }
+
+    .nav-brand {
+        justify-self: start;
+        margin-right: 0;
+    }
+
+    .nav-links {
+        justify-self: center;
+    }
+
+    .nav-theme {
+        justify-self: end;
+        margin-left: 0;
+    }
 }
 
 /* collapsible menu — 10.22.2026

@@ -716,6 +716,7 @@ ratio, landmark regions.
 | The strip above the nav | Margin collapsing, BFC, `display: flow-root` (sections 2–3) |
 | `.home h3` beating `.plate-name` | Specificity and cascade (section 5) |
 | Theme picker and dark plates | Custom properties, `data-*`, cascade (sections 6–7) |
+| `.dev/DESIGN.md` token tables | Aliased custom properties and theme overrides (section 6) |
 | No flash on reload | Pre-paint script, FOUC, render-blocking (section 8) |
 | Theme survives navigation | `localStorage`, origin (section 9) |
 | Scrollbar and form colors | `color-scheme`, native widgets (section 10) |

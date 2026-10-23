@@ -15,6 +15,134 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.23.2026 08:33–08:50am CDT — Inner pages: navbar aligned to the homepage precedent
+
+### Overview
+
+The homepage navbar has a three-zone layout (brand left, page links centred, theme picker right) and sits
+28px from the top of the window. `about`, `projects`, and `community` rendered the same pill but 68px down
+and with the links centred by accident rather than by construction. The nav now uses the homepage geometry
+on every page that has it.
+
+### What changed
+
+- **`styles.css`** (`.nitrox-nav`, desktop `min-width: 721px`): the pill is a grid
+  (`1fr auto 1fr`) instead of a flex row with auto margins. Brand `justify-self: start`, links
+  `justify-self: center`, theme picker `justify-self: end`. Below 721px the existing flex/mobile rules
+  still apply untouched.
+- **`styles.css`** (`.page`): top padding `40px` → `0`, bottom stays `40px`. With the nav moved out of the
+  container, its own `margin: 28px auto 3rem` now controls the top gap on inner pages.
+- **`about.html`, `community.html`, `projects.html`**: `#nav-placeholder` moved out of `<main class="page">`
+  to a direct body child, the same structure `index.html` already used.
+
+### Decisions
+
+- **Structure over offset hacks.** The 40px discrepancy was `.page`'s padding sitting above the nav. Moving
+  the placeholder out of `.page` matches the homepage and removes the cause; a negative margin on the
+  placeholder would have worked but hides the real nesting problem.
+- **Grid, not auto margins.** `margin-right: auto` + `margin-left: auto` splits free space by *width*, so
+  the links were only centred while brand and theme happened to be similar widths (they are 105px and
+  92px, so it was off by a few px). A `1fr auto 1fr` grid centres the middle column by definition.
+- **Theme picker stays homepage-only.** `script.js` deliberately removes it on non-home pages; left as is
+  because this task was geometry, not scope. Noted as an open question.
+- Mobile breakpoint rules were not rewritten; they already switch the pill to a brand + toggle row.
+
+### Validation
+
+- Headless Chrome screenshots at 1440px: `index.html` and `about.html` both put the pill's top edge at
+  ~28–30px, brand at the left cap, links centred in the pill.
+- Headless Chrome at 500px (mobile rules): pill collapses to brand + three-line toggle, panel closed.
+  A 390px screenshot first looked clipped — that was Chrome's minimum headless window width cropping the
+  capture, not layout overflow; re-shot at 500px clean.
+- Not checked: real mobile device, keyboard focus order after the DOM move, light/paper theme on inner pages
+  (they have no theme picker, so they stay on the blue field).
+
+### Subtasks
+
+- [x] Move `#nav-placeholder` out of `.page` on the three inner pages
+- [x] Zero the `.page` top padding
+- [x] Grid-based three-zone navbar on desktop
+- [ ] Decide whether the theme picker should be global (currently removed by `script.js` on inner pages)
+- [ ] Merge `dev` into `main` — held pending the owner's go-ahead
+
+### Follow-up
+
+- `.dev/DESIGN.md` §6.1 updated in the same pass so the doc and the code agree.
+
+---
+
+## 10.23.2026 08:31–08:45am CDT — `DESIGN.md`: the parent design precedent
+
+### Overview
+
+The owner asked for a design precedent extracted from the current Nitrox homepage, modelled on
+Tesseract's old draft `DESIGN.md`, with room for the stack-precedent idea (apps inherit defaults and
+override only what they need) and a parked section for future glass/metal/Y2K/Aqua/Aero accents.
+`.dev/DESIGN.md` now records the implemented homepage system, the override model, and a material backlog
+that is explicitly not precedent.
+
+### What changed
+
+- **`.dev/DESIGN.md`** (new): 13 sections + two appendices. Status/authority rule, inheritance-and-override
+  model (Java subclass analogy), colour tokens and theme resolution, type scale, geometry and spacing,
+  component specs (nav, theme picker, buttons, hero, plates, chips, index rows, community buttons,
+  one-off themes, footer), icons and marks, motion, texture/glow, voice, accessibility and performance,
+  the **Aesthetics and material backlog**, file map and debt, plus a Tesseract-draft mapping table.
+- **`00-docs-meta.md`**: the "Visual system" precedent row now points at `.dev/DESIGN.md` instead of
+  repeating the short description.
+- **`02-design-old.md`**: added a "superseded in part" note — visual system moved to `.dev/DESIGN.md`;
+  product/architecture principles stay.
+- **`.dev/human-learning.md`**: added one map row linking the token tables to §6 (aliased custom
+  properties), rather than adding a duplicate concept section.
+
+### Decisions
+
+- **Design precedent lives at `.dev/DESIGN.md`**, sibling to `WORKLOG.md` and `human-learning.md`. It is
+  a living standard, not a per-task note, so it does not go in `.dev/docs/`.
+- **The homepage is the reference, the inner pages are not.** `about` / `projects` / `community` still use
+  the older `styles.css` shell and are recorded as pre-migration, not as evidence of the new system.
+- **Parent overrides are explicit.** The doc names what an app may override freely (accent, mark, density),
+  what needs a reason (display face, icon set, motion), and what it may not touch (offline, focus,
+  reduced motion, honesty).
+- **Texture and glow stay interaction-level.** The Tesseract grain + hover glow is recorded as product
+  language; the parent stays flat, with only the plate hover glow and nav shadow allowed today.
+- **The backlog section is named "Aesthetics and material backlog"** (owner's pick, over "material bench")
+  because the workbench already means "in progress" on the site.
+- **Status words match the existing docs vocabulary**; unresolved and unaudited items are labelled rather
+  than smoothed over.
+
+### Validation
+
+- Read all current site CSS/JS/HTML (`home.css`, `styles.css`, `script.js`, `theme.js`, `navbar.html`,
+  `index.html`, `about.html`, `community.html`, `projects.html`, `404.html`, `bsod.html`) and took token,
+  size, timing, and breakpoint values from those files rather than from the plan docs.
+- Confirmed `assets/noise.png` exists and nothing in the site CSS references it.
+- Confirmed Phosphor paths are inlined in `navbar.html`; icon delivery is still unresolved.
+- Confirmed `.dev/docs (edit later)/v0.1b/02-design.md` had already been renamed to `02-design-old.md`
+  by the owner before this entry.
+- Not checked: rendered screenshots after the doc-only pass (no visual changes were made); contrast
+  values remain unaudited as stated in §11.
+
+### Subtasks
+
+- [x] Extract tokens, components, motion, and voice from the implemented homepage
+- [x] Define the app inheritance/override model and the deviation table
+- [x] Add the parked aesthetics/material backlog with promotion rules
+- [x] Cross-link `00-docs-meta.md` and `02-design-old.md`
+- [x] Add the human-learning map row
+- [ ] Decide whether `about` / `projects` / `community` get migrated to the homepage tokens
+- [ ] Resolve Phosphor delivery (sprite vs bundled webfont vs inline)
+- [ ] Run the first contrast audit and move §11.3 gaps into the TODO set
+
+### Follow-up
+
+- Discuss making `dev-worklog`, `dev-project-docs`, and `dev-human-learning` the default behaviour for
+  repo work (the owner raised this during the task; no config changed yet).
+- Rename the duplicate `.btn` definitions, move `--mono` into `styles.css`, and de-duplicate the dark
+  token block when the homepage CSS gets its next structural pass.
+
+---
+
 ## 10.23.2026 08:29am CDT — Learning doc and the Dev Human Learning skill
 
 ### Overview

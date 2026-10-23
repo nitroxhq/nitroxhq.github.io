@@ -92,7 +92,7 @@ These are the defaults an app inherits unless it records a deviation. The list i
 | App stack | Tauri 2 + React + TypeScript + Vite + Tailwind, with a browser/PWA target, is the current **proposal**. Not a decided standard. | Proposed |
 | Platform boundary | Native APIs behind platform/storage adapters; UI/domain logic does not call Tauri directly. Browser uses File System Access/OPFS with IndexedDB or local storage as fallback. | Proposed |
 | Type safety | Strict TypeScript and runtime validation at data boundaries (for example frontmatter). | Proposed |
-| Visual system | Parent brand foundation plus app-specific adaptation. Parent surface: blue field, warm paper, ink; Instrument Serif display, Inter body, Instrument Sans UI, Geist Mono labels. Product accents live inside product surfaces. | Homepage implemented; parent system not finalized |
+| Visual system | Parent brand foundation plus app-specific adaptation. Parent surface: blue field, warm paper, ink; Instrument Serif display, Inter body, Instrument Sans UI, Geist Mono labels. Product accents live inside product surfaces. Token values, components, motion, voice, and the override rules live in [`.dev/DESIGN.md`](../../DESIGN.md). | Homepage implemented; parent system not finalized |
 | Icons | Phosphor is the current direction. Delivery must work offline (bundled). | Unresolved |
 | Accessibility | Contrast checked, visible focus states, reduced-motion respected, keyboard reachable. | Required, not yet audited |
 | Honesty | A page, repo, scaffold, or waitlist is not proof of working behavior. Phases stay unassigned until deliberately set. | Applied |
