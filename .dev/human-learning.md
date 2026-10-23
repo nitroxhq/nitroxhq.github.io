@@ -153,7 +153,7 @@ The other fixes people reach for, and why they are worse here:
 
 | Fix | Works? | Cost |
 |---|---|---|
-| `padding-top: 28px` on the parent | Yes | Hard-codes the spacing twice; breaks if the nav margin changes |
+| `padding-top: 28px` on the parent | Yes | Unless the nav's own margin is removed, the gap doubles to 56px; also hard-codes the value |
 | `border-top: 1px solid transparent` | Yes | Adds a pixel; still a magic value |
 | `overflow: hidden` on the parent | Yes | Clips the nav's shadow and any dropdown |
 | `display: flow-root` | Yes | Modern, no clipping, no extra box |
@@ -299,7 +299,8 @@ body { background: var(--page-bg); }
 - `styles.css` defines `--page-bg`, `--page-text`, `--page-soft`, `--page-line`,
   `--panel-bg`, `--panel-border`, plus `--blue`, `--paper`, `--ink`.
 - `html[data-theme="light"]` overrides them for paper.
-- `html[data-theme="dark"]` overrides them for the blue-field brand dark.
+- `html[data-theme="dark"]` overrides them for the dark page (near-black surface, blue hero
+  unchanged).
 - `home.css` adds page-scoped tokens: `--home-bg`, `--home-ink`, `--plate-tess-bg`,
   `--plate-chip-bg`, and so on.
 - The product plates read `--plate-*` so a single dark block restyles the whole card.
@@ -365,7 +366,7 @@ If the script were `defer`red, or placed at the end of `<body>`, the browser cou
 the default theme first and then switch. That is FOUC — flash of unstyled/wrong content.
 
 **Tradeoff.** A synchronous script in the head delays parsing slightly. Keep it tiny and
-dependency-free (this one is 14 lines and has no imports).
+dependency-free (this one is a dozen lines and has no imports).
 
 **Terms to look up.** FOUC, render-blocking, parser-blocking, `defer` vs `async`,
 critical rendering path.
