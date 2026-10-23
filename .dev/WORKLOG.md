@@ -15,6 +15,125 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.23.2026 08:50am CDT — Repo `AGENTS.md`: read precedent before editing
+
+### Overview
+
+The design precedent only works if the next task reads it before the first edit. This adds a repo-level
+`AGENTS.md` that orders the docs to consult, states the deviation rule, and separates "precedent is
+binding" from "this is where you can be creative". It is the repo half of a global config change:
+documentation is now a default expectation, and the working style is creative but patiently analytical.
+
+### What changed
+
+- **`AGENTS.md`** (new): eight-step read order (`DESIGN.md` §0–§1 → relevant `DESIGN.md` sections →
+  `00-docs-meta.md` §3 → `03-status.md` → `01-readme.md` → app doc → recent worklog → learning doc when the
+  task is CSS behavior); the conflict/deviation rule; a creativity table; hard limits; file map; and a
+  definition-of-done checklist.
+- **`~/.config/opencode/AGENTS.md`** (global, outside this repo): the short documentation blurb became a
+  full section with entry contents, topic-doc and learning-doc triggers, a division-of-labour table, and a
+  definition of done. Added a "Working style" section: creative and patiently analytical, focused, with
+  ~10–20% of recent GPT eagerness and none of the sprawl.
+- **`@projects/opencode-meta/`**: new README section, `after/AGENTS.md` snapshot, and a projects-worklog
+  entry. Machine-level detail lives there, not here.
+
+### Decisions
+
+- **Repo guidance points at docs instead of restating them.** The file names the section to read; it does
+  not copy token values or component rules, so `DESIGN.md` stays the single source and does not drift from a
+  second summary.
+- **Precedent is a floor, not a ceiling.** Layout, copy, imagery, product surfaces, and new components are
+  explicitly free; only a new *aesthetic* has to climb the `DESIGN.md` §12 ladder.
+- **Shared chrome is a separate decision.** Restyling nav/footer/tokens during a page task is called out as
+  its own change, because that is how systems quietly fork.
+- **No human-learning entry.** The task exposed no browser mechanic; the rule is to skip rather than
+  manufacture a lesson.
+
+### Validation
+
+- All 7 relative links in `AGENTS.md` resolve.
+- The file is auto-loaded as repo instructions in this session (confirmed by the harness).
+- Global config snapshot matches the live file (`diff -q` clean).
+- Not checked: whether a fresh session actually follows the read order before editing; that needs a real
+  task, and it is a follow-up.
+
+### Subtasks
+
+- [x] Write the repo read order and precedence rules
+- [x] Define creativity zones and hard limits
+- [x] Add the file map and definition of done
+- [x] Cross-link the global change from `@projects`
+- [ ] Watch the first fresh task for read-order compliance
+
+### Follow-up
+
+- Trim the read order if it becomes a ritual; move detail into `DESIGN.md` and link, never duplicate.
+- Decide whether other active repos need an equivalent precedent-first `AGENTS.md`.
+
+---
+
+## 10.23.2026 08:52–09:00am CDT — Nav pill hugs its content
+
+### Overview
+
+`width: 50vw` gave every page the same pill width, which meant inner pages — where `script.js` removes the
+theme picker — carried about 140px of empty white on the right. The pill now sizes to its own contents and
+the brand→links gap carries the rhythm instead. The homepage is visually unchanged because its three
+groups plus the wider gap land at almost exactly the old `50vw`.
+
+### What changed
+
+- **`styles.css`** (`.nitrox-nav`): `width: 50vw` → `width: max-content`; dropped the now-redundant
+  `min-width: max-content`; `gap: 2rem` → `gap: 3rem` (1.5x). `max-width: calc(100vw - 32px)` kept as the
+  overflow guard.
+- **`styles.css`**: removed the `@media (min-width: 721px)` grid block (`1fr auto 1fr`), whose whole job
+  was faking a centred middle column in a pill that was wider than its content.
+- **`styles.css`**: removed `margin-right: auto` from `.nav-brand` and `margin-left: auto` from `.nav-theme`.
+  Auto margins only push when there is leftover space; a hugged pill has none. The mobile query re-adds the
+  picker's auto margin, so the ≤720px row is unchanged.
+- **`.dev/DESIGN.md`** §5.2 and §6.1: pill width and inner-page padding rows corrected to match the code,
+  plus the hug rule written down as precedent.
+- **`.dev/human-learning.md`**: new §21, "Width that hugs its content", and a row in the map table.
+
+### Decisions
+
+- **Hug over centring.** A `1fr auto 1fr` grid and a hugging container are mutually exclusive: `fr` and auto
+  margins distribute *leftover* space, and hugging removes the leftover. Centring a middle column needs
+  symmetric space on both sides, which is exactly the whitespace being removed. The gap increase is the
+  compromise — the brand/title rhythm reads the same, the empty half does not.
+- **3rem, not 2rem.** 1.5x was the owner's number, and it roughly matches what the old empty right column
+  contributed to the homepage's proportions.
+- **No spacer element.** A hidden spacer equal to the brand width would have kept true centring, at the cost
+  of real DOM and a width that changes when the wordmark changes. Not worth it for a static pill.
+- **`.page` padding stays as set yesterday** (`0 24px 40px`); the doc was the thing out of date, not the code.
+
+### Validation
+
+- Headless Chrome at 1440px: homepage pill spans ~360–1082 (unchanged); `about` shrinks from ~720 to
+  ~580px with the right whitespace gone.
+- Headless Chrome at 820px: desktop layout still fits with no overflow; 500px: mobile row
+  (brand + hamburger) unaffected by the width change.
+- Checked the surrounding rules for the previous failure modes: `width: auto` still wins in the ≤720px
+  query, `.nav-menu { display: contents }` still hands the links straight to the flex row, and no auto
+  margins are left on desktop to fight the hug.
+- Not checked: real-device rendering, extreme text zoom (noted as a known failure mode in learning §21),
+  or the `:3` tooltip at other breakpoints.
+
+### Subtasks
+
+- [x] Switch the pill to `max-content`
+- [x] Widen the brand→links gap to 1.5x
+- [x] Remove the grid block and the auto-margin scaffolding
+- [x] Update `DESIGN.md` §5.2 + §6.1
+- [x] Write learning §21 and update the map
+- [ ] Merge `dev` into `main` — still held for the owner's go-ahead
+
+### Follow-up
+
+- Old worklog entries still describe `50vw`; left intact on purpose (history), superseded by this entry.
+
+---
+
 ## 10.23.2026 08:33–08:50am CDT — Inner pages: navbar aligned to the homepage precedent
 
 ### Overview

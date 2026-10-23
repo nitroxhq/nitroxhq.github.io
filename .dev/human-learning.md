@@ -709,7 +709,90 @@ ratio, landmark regions.
 
 ---
 
-## 21. Map of what we built → what it teaches
+## 21. Width that hugs its content — `max-content` vs `50vw`
+
+**What we hit.** The nav pill was `width: 50vw`, so on any page without the theme picker the right half
+of the pill was empty white — roughly 140px of nothing. The ask was "width = hug", like Figma's auto-layout,
+while keeping the homepage looking unchanged.
+
+**ELI5.** `50vw` is buying a fixed-size picture frame and hoping the drawing fills it. `max-content` is
+cutting the paper to the drawing. The frame gets smaller, so the drawing does not move — but all the
+empty wall around it disappears.
+
+**What actually happens.** Width is not one value; it is a keyword with different meanings per formatting
+context:
+
+| value | means | where you see it |
+|---|---|---|
+| `auto` | for a block, "fill the parent"; for a flex/grid item, "size to content, then grow/shrink" | default everywhere |
+| `min-content` | narrowest possible — the longest unbreakable word | rarely set by hand |
+| `max-content` | widest possible — the layout with **no** soft wrapping at all | the "hug" |
+| `fit-content` | `min(max-content, available)` — hug, but never overflow the parent | the built-in guard |
+
+The nav uses `width: max-content` plus `max-width: calc(100vw - 32px)`, which is "hug, but stop at the
+window edge". Because `.nav-buttons` are `white-space: nowrap`, there is no soft-wrap point, so
+`max-content` is exactly brand + gaps + links + theme + padding.
+
+The part that made this less obvious: **a grid that centres by construction cannot hug.** The previous
+layout was `grid-template-columns: 1fr auto 1fr`. `fr` distributes *free space*. Once the pill is only as
+wide as its content there is no free space to distribute, so each `1fr` collapses to whatever is inside it
+— brand ≈105px on the left, and **0px on the right**, because the theme picker is removed on inner pages.
+The middle column then slides right instead of staying centred. Auto margins fail the same way:
+`margin-left: auto` absorbs free space, and there is none left.
+
+So "hug the content" and "centre a middle column with unequal sides" are opposing demands. Pick one:
+
+| Want | Give up |
+|---|---|
+| Hug | true centring (the middle group sits where the flow puts it) |
+| True centring | symmetric empty space on both sides |
+| Hug + symmetric look | make both side groups the same width (spacer element, or a fixed minimum) |
+
+We chose hug, and bought back the rhythm with a wider gap: `2rem` → `3rem` (1.5x) between brand and links,
+which is roughly what the old empty right column was contributing to the homepage's look.
+
+**The fix.**
+
+```css
+/* before */
+gap: 2rem;
+width: 50vw;
+min-width: max-content;
+
+/* after */
+gap: 3rem;
+width: max-content;
+max-width: calc(100vw - 32px);
+```
+
+and the removal of the `@media (min-width: 721px)` grid block plus the two auto margins
+(`.nav-brand { margin-right: auto }`, `.nav-theme { margin-left: auto }`) that only did anything when the
+pill was wider than its content. The mobile query still sets `width: auto`, so below 721px the pill goes
+back to filling the row with brand + hamburger.
+
+**How to prove it.** Select `.nitrox-nav` in DevTools → Computed → `width`. Homepage is ≈720px (it was
+`50vw` of 1440 and is now the natural content width, which happens to match). `about.html` drops from
+≈720px to ≈580px. In the Styles pane, hover the `width` declaration and Chrome lists the keyword options
+with a live preview of each; `max-content` is visibly the tightest that keeps everything on one line.
+Or from the console:
+
+```js
+document.querySelector('.nitrox-nav').getBoundingClientRect().width
+```
+
+**If you remember one thing.** `max-content` hugs, `fr` units and auto margins only work with leftover
+space — so a hugging container cannot also centre a middle column against unequal neighbours.
+
+**Failure mode.** At extreme text zoom the nowrap row exceeds `max-width: calc(100vw - 32px)` and the
+items spill past the rounded right cap. The guard is the 721px breakpoint (or a smaller gap at mid
+widths), not a wider fixed width.
+
+**Terms to look up.** `max-content`, `fit-content`, `min-content`, flex `fr` distribution, available space,
+auto margins, `white-space: nowrap`.
+
+---
+
+## 22. Map of what we built → what it teaches
 
 | Thing in the repo | Concept |
 |---|---|
@@ -722,6 +805,7 @@ ratio, landmark regions.
 | Scrollbar and form colors | `color-scheme`, native widgets (section 10) |
 | Nav at 390px vs 1440px | `min()`, `clamp()`, `100vw` trap (section 11) |
 | Picker pushed to the right | Flexbox auto margins (section 12) |
+| Nav pill hugs its content | `max-content`, `fr` vs available space (section 21) |
 | One navbar for five pages | `fetch` + `innerHTML` (section 13) |
 | Panel opens under 720px | Media queries + `matchMedia` (section 14) |
 | Blue field starts at y=0 | Box model + paint order (sections 1–2) |

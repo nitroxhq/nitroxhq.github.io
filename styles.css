@@ -233,14 +233,16 @@ a.button:hover {
 
 
 /* Navigation */
-/* 10.22.2026 — floating white pill navbar, centered, ~50vw wide */
+/* 10.22.2026 — floating white pill navbar, centered
+   10.23.2026 — width hugs its content instead of a fixed 50vw, and the
+   brand→links gap carries the extra air (1.5x) so the pill keeps its rhythm
+   without the empty right side on pages that have no theme picker. */
 .nitrox-nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
-    width: 50vw;
-    min-width: max-content;
+    gap: 3rem;
+    width: max-content;
     max-width: calc(100vw - 32px);
     margin: 28px auto 3rem auto;
     padding: 10px 22px;
@@ -252,28 +254,9 @@ a.button:hover {
     z-index: 10;
 }
 
-/* desktop: brandmark pinned left, page links dead-centre in the pill,
-   theme picker pinned right — matching the homepage (10.23.2026) */
-@media (min-width: 721px) {
-    .nitrox-nav {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-    }
-
-    .nav-brand {
-        justify-self: start;
-        margin-right: 0;
-    }
-
-    .nav-links {
-        justify-self: center;
-    }
-
-    .nav-theme {
-        justify-self: end;
-        margin-left: 0;
-    }
-}
+/* desktop: the pill hugs its content, so the three groups simply sit in order —
+   brand, links, theme picker. The 3rem gap does the spacing that the old
+   1fr/auto/1fr grid used to fake. */
 
 /* collapsible menu — 10.22.2026
    desktop: contents, so .nav-links stays a direct child of the pill
@@ -335,7 +318,6 @@ a.button:hover {
     display: inline-flex;
     align-items: center;
     gap: 2px;
-    margin-left: auto;
     padding: 3px;
     border-radius: 999px;
     background-color: rgba(0, 0, 0, 0.05);
@@ -436,7 +418,6 @@ html[data-theme="light"] .nitrox-nav {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-right: auto;
 }
 
 .nav-brand-text {

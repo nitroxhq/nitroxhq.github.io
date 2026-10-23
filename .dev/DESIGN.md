@@ -370,8 +370,8 @@ No `border-radius: 4px` tech-card look. No mixing a sharp card and a 28px pill i
 | Context | Value |
 |---|---|
 | Homepage content width | `min(1120px, 100% - 48px)` |
-| Inner-page column | `max-width: 900px`, padding `40px 24px` |
-| Nav pill | `width: 50vw`, `min-width: max-content`, `max-width: calc(100vw - 32px)` |
+| Inner-page column | `max-width: 900px`, padding `0 24px 40px` (nav sits outside it) |
+| Nav pill | `width: max-content`, `max-width: calc(100vw - 32px)` |
 | Section vertical padding | `clamp(4rem, 8vw, 7rem)` |
 | Hero padding | `3.5rem 0 2.75rem` |
 | Closing padding | `clamp(4.5rem, 9vw, 7.5rem)` |
@@ -423,9 +423,11 @@ instead of re-deriving it.
 
 Source: `navbar.html`, `styles.css`.
 
-- Floating white pill, centered, `width: 50vw`, `margin: 28px auto 3rem`.
-- Desktop layout is a `1fr auto 1fr` grid: brand pinned left, page links centred in the pill, theme picker
-  pinned right. Below `721px` it becomes a flex row that collapses to brand + toggle.
+- Floating white pill, centered, `width: max-content` (hugs its contents), `margin: 28px auto 3rem`,
+  `max-width: calc(100vw - 32px)`.
+- Layout is a plain flex row: brand, links, theme picker, separated by `gap: 3rem`. Because the pill is only
+  as wide as its content, no auto margins or equal-width grid columns are needed; pages without the theme
+  picker end after the links instead of carrying an empty right half.
 - Contents: brand logo + wordmark, links (home, projects, community, about, `:3`), theme picker.
 - Link style: Instrument Sans, `1.05rem`, 600, pill hover `rgba(0,0,0,.06)`, active blue text.
 - Shadow: `0 8px 20px rgba(0,0,0,.18)`; lighter on paper pages.
