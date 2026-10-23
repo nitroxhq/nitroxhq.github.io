@@ -15,6 +15,74 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.23.2026 08:29am CDT — Learning doc and the Dev Human Learning skill
+
+### Overview
+
+The owner asked to learn the real mechanics behind the work, starting with the margin-collapse
+bar. This adds a repo-local teaching doc and the skill that keeps it current, plus the doc-map
+section that the meta doc was missing.
+
+### What changed
+
+- **`.dev/human-learning.md`** (new): 21 sections. Box model; margin collapsing (the bar above the
+  navbar, in four levels); BFC and `flow-root`; normal flow; cascade and specificity; custom
+  properties; `data-*`/`dataset`; FOUC and the pre-paint script; `localStorage`; `color-scheme`
+  and scrollbars; responsive units and the `100vw` trap; flexbox; `fetch` + `innerHTML`; media
+  queries and `matchMedia`; the critical rendering path; GitHub Pages; images; accessibility;
+  DevTools moves; glossary; artifact → concept map.
+- **`~/.config/opencode/skills/dev-human-learning/SKILL.md`** (new): the skill that writes and
+  maintains the file. Trigger phrases ("ELI5", "teach me", "how does this actually work"), the
+  entry template, the quality bar, and the boundary against Worklog and Dev Project Docs.
+- **`00-docs-meta.md`**: new §0 document map (product docs, dev notes, worklog, learning notes,
+  meta), a note that repo-level notes are not numbered, and new §6 with the learning-doc format
+  and rules.
+
+### Decisions
+
+- **The learning doc lives in `.dev/`, not `v0.1b/`.** It is repo-level teaching, not product
+  documentation, and `.dev/` is a dot-directory that GitHub Pages ignores.
+- **One concept per section, symptom first.** The doc opens from the bug the owner saw, not from a
+  definition, so it stays anchored to this repo.
+- **The skill writes the format, the worklog stays the timeline.** The learning file explains the
+  mechanism; it never claims product status.
+- **The meta doc is the doc for the docs.** It now carries the map and the learning format so the
+  next doc does not have to be reverse-engineered.
+
+### Human actually learned
+
+- Why the strip above the nav changed with the theme: the nav's 28px top margin collapsed through
+  `#nav-placeholder`, so the margin sat outside the blue box and the body background painted it.
+- Why `display: flow-root` fixes it without clipping the shadow, and why `padding-top` or
+  `overflow: hidden` are worse.
+- The difference between the painted border box and the transparent margin box.
+
+### Validation
+
+- The skill is registered by OpenCode as `dev-human-learning` (appears in the available-skills list
+  after writing the file).
+- Markdown structure checked by reading the rendered headings; all internal references point at
+  files that exist.
+- The margin-collapse claims were verified earlier with `getBoundingClientRect()` and pixel samples:
+  placeholder `top: 0`, height 82; blue `rgb(50,50,255)` at y=0 in both themes.
+- Not tested: how the doc reads on GitHub's renderer or on mobile.
+
+### Artifacts
+
+- [`human-learning.md`](human-learning.md)
+- [`00-docs-meta.md`](<docs (edit later)/v0.1b/00-docs-meta.md>)
+- `~/.config/opencode/skills/dev-human-learning/SKILL.md` (outside the repo)
+
+### Subtasks
+
+- [x] Write `.dev/human-learning.md` with the concepts so far
+- [x] Add the Dev Human Learning skill
+- [x] Add the document map and learning-doc format to the meta doc
+- [ ] Keep adding a section whenever a new mechanism shows up
+- [ ] Decide whether the learning doc should be linked from the worklog header
+
+---
+
 ## 10.22.2026 11:28pm CDT — Blue field reaches the top of the homepage
 
 ### Overview

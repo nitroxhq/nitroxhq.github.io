@@ -1,6 +1,20 @@
 # Nitrox docs — meta, format, and technical precedent
 
-> **Status:** Working conventions, 2026-10-22. This file describes how the doc set is organized and how app docs are written. It does not describe product behavior or make implementation claims.
+> **Status:** Working conventions, 2026-10-23. This file describes how the doc set is organized and how app docs are written. It does not describe product behavior or make implementation claims.
+
+## 0. Document map
+
+Four kinds of writing live in this repo. They answer different questions; do not merge them.
+
+| Layer | Path | Question it answers | Maintained by |
+|---|---|---|---|
+| Product docs | `.dev/docs (edit later)/v0.1b/` | What is the app, where is it, what is planned? | ad hoc, format below |
+| Dev notes | `.dev/docs/` | Why was this built or decided this way? | Dev Project Docs |
+| Worklog | `.dev/WORKLOG.md` | What changed, when, and how was it checked? | Dev Worklog |
+| Learning notes | `.dev/human-learning.md` | How does the browser actually do that? | Dev Human Learning |
+
+The meta doc you are reading describes its own row. `.dev/` is a dot-directory, so GitHub Pages
+ignores it: these notes are in the repo, not on the site.
 
 ## 1. File conventions
 
@@ -10,6 +24,8 @@
 - **Numbers are stable.** Add new docs at the end; do not renumber to make a semantic order. Renaming is a link-sweep task, not a casual edit.
 - **Links are relative and URL-safe** — `[06-tesseract-docs.md](06-tesseract-docs.md)`.
 - **Every doc opens with a status blockquote** that states what the doc is and what it is not.
+- **Repo-level notes are not numbered.** `WORKLOG.md` and `human-learning.md` sit directly in `.dev/`
+  and use their own formats. They are not part of the `v0.1b` product set and do not follow `NN-name.md`.
 
 ## 2. App doc format
 
@@ -96,3 +112,41 @@ Use the vocabulary in [03-status.md](03-status.md): owner-confirmed direction, s
 [06-tesseract-docs.md](06-tesseract-docs.md) is the reference for structure and depth: intent first, compact overview, then a stable-ID inventory with honest phase labels. New app docs should match that granularity without inheriting its scope.
 
 [07-einstein-docs.md](07-einstein-docs.md) is the first doc written in this format from the start.
+
+## 6. Learning notes (`human-learning.md`)
+
+Repo-level, not an app doc. Lives at `.dev/human-learning.md` next to the worklog and is maintained by the
+**Dev Human Learning** skill. Its audience is the owner, not users or contributors.
+
+**Purpose.** Explain the mechanism behind a real change in this repo: first ELI5, then the browser's actual
+behavior, then the fix and how to prove it. It is a teaching artifact, not product evidence and not a
+substitute for the worklog.
+
+**Format.** One `##` section per concept, with these parts in order:
+
+```markdown
+## N. Concept — the symptom that exposed it
+
+**What we hit.** The real file and the real behavior.
+**ELI5.** One concrete analogy that still maps to the mechanism.
+**What actually happens.** The rule, the terms, the edge cases; a table or diagram when useful.
+**The fix.** The change quoted from the repo, and why this fix over the alternatives.
+**How to prove it.** DevTools steps and the values to expect.
+**If you remember one thing.** One sentence.
+**Terms to look up.** Three to six terms.
+```
+
+**Rules.**
+
+- Start from something that happened in this repo; no textbook chapters.
+- ELI5 first, mechanics second. The analogy may simplify but must not lie.
+- One concept per section; cross-reference instead of repeating.
+- Show before/after geometry with a small diagram when the bug was spatial.
+- Name the tradeoff and the failure mode of the wrong fix.
+- Verify behavior before writing it down; mark anything unchecked as unverified.
+- Correct wrong notes in place and say what changed; do not silently rewrite history.
+- Keep a final "what we built → what it teaches" map so the doc stays browsable.
+- Link the doc from the worklog entry that produced the concept.
+
+This file is not part of the `v0.1b` numbering, is never linked from the public site, and does not carry
+product claims.
