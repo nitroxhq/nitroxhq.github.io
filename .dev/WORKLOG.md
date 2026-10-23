@@ -15,6 +15,36 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.22.2026 11:28pm CDT — Blue field reaches the top of the homepage
+
+### Overview
+
+The strip above the navbar was the body's theme background, not the blue hero. On the
+homepage it showed up as a dark rail in dark mode and a paper rail in light mode — the
+"bar that reflects the theme" the owner kept seeing.
+
+### Cause
+
+`.nitrox-nav` has `margin: 28px auto …`. `#nav-placeholder` had no padding or border, so
+the nav's top margin collapsed through it; the placeholder's blue background started at
+the nav's border box, and the 28px above it painted `body.home`'s background.
+
+### What changed
+
+- `.home #nav-placeholder` gets `display: flow-root`, which establishes a BFC and keeps
+  the child margin inside the div. The blue now covers the gap and the nav, with the hero
+  blue starting exactly at the pill's bottom edge.
+- No spacing values changed: nav is still 28px from the top and the hero starts at 82px
+  (390px mobile: nav ends at 309px, hero starts at 309px).
+
+### Validation
+
+- Pixel sample at x=50 on `index.html` is `rgb(50,50,255)` from y=0 in both dark and light.
+- `placeholder` now spans y=0–82 with `rgb(50,50,255)`; previously y=0–28 was `#0d0d12`.
+- Mobile 390px light: blue from the very top; open panel still sits on blue.
+
+---
+
 ## 10.22.2026 11:13pm CDT — Theme picker scoped to the homepage
 
 ### Overview

@@ -98,8 +98,11 @@ body.home {
   color: var(--home-ink);
 }
 
-/* the floating pill floats on the blue field, not on a paper strip */
+/* the floating pill floats on the blue field, not on a paper strip.
+   flow-root keeps the nav's top margin inside this div so the blue also
+   covers the gap above the pill (a collapsed margin let the body show). */
 .home #nav-placeholder {
+  display: flow-root;
   background-color: var(--blue);
 }
 
