@@ -159,15 +159,44 @@ body.home {
   margin: 0 auto;
 }
 
+/* The mark is positioned against the content column, not the window. The stage
+   is the same width as `.hero-inner` (via `.wrap`) but spans the whole field, so
+   zooming out widens the blue field while the mark keeps its distance from the
+   copy instead of sliding out to the screen edge. */
+.hero-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Anchored by its top edge a quarter of the way down the blue field, measured
+   from the navbar. Sizing against the field's own height (rather than only the
+   viewport width) is what keeps it off the top edge and inside the field: at
+   top 25% there is 70% of the field left for the mark, and 70% is what it gets.
+   `height` + `width: auto` keeps the SVG's 141:152 ratio.
+   `right` is measured from the content column, so the mark keeps its distance
+   from the copy at any zoom: 15% of the column past its right edge, but never
+   more than the empty margin outside the column, so the shape stays on screen
+   when the window is barely wider than the copy. */
 .hero-mark {
   position: absolute;
-  top: 46%;
-  right: -6%;
-  width: min(46vw, 520px);
-  height: auto;
-  transform: translateY(-50%);
+  top: 25%;
+  right: calc(-1 * min(15%, (100vw - 100%) / 2));
+  height: 70%;
+  width: auto;
   opacity: 0.18;
   pointer-events: none;
+}
+
+/* On phones the field is short and the old viewport-width ratio already put the
+   mark about a quarter of the way down, so keep that size and only pin the
+   position. */
+@media (max-width: 760px) {
+  .hero-mark {
+    top: 24%;
+    width: min(46vw, 520px);
+    height: auto;
+  }
 }
 
 .eyebrow {

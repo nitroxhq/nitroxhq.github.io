@@ -792,7 +792,104 @@ auto margins, `white-space: nowrap`.
 
 ---
 
-## 22. Map of what we built → what it teaches
+## 22. Percentage offsets resolve against the parent — and a mark taller than its field cannot move
+
+**What we hit.** The hero watermark sat with its top edge 7–19px under the navbar at every desktop width,
+so it read as glued to the top of the page. The ask was to put it roughly a quarter of the way down the
+blue field instead. The rule was `top: 46%` + `translateY(-50%)`, which looks like it should be *centred*
+in the field, not pinned to the top.
+
+Then a second half of the same ask appeared: at 50–80% browser zoom the mark slid out to the right edge of
+the window, hundreds of pixels away from the copy. It was anchored with `right: -6%` of the hero **field**,
+and the field is as wide as the window — so zooming out made the field wider while the 1120px text column
+stayed the same size. The mark was following the thing it was measured against.
+
+**ELI5.** Percentages on a positioned element are measured inside its own parent box, like a sticker
+measured from the edge of the card it is stuck to — not from the edge of the screen. And a sticker almost
+as tall as the card has nowhere to move: push it down and it hangs off the bottom.
+
+**What actually happens.**
+
+- `top: 46%` is 46% of the **containing block** — the padding box of the nearest positioned ancestor,
+  `.hero-field` (`position: relative`). It is not 46% of the viewport. That is why the mark's position
+  followed the hero's height, not the window's.
+- `transform: translateY(-50%)` then shifts the mark up by half of its **own** height. So the gap above
+  the mark is `46% of field height − 50% of mark height`. At 1440px: `0.46 × 650 − 0.5 × 560 = 19px`.
+  The CSS never said "hug the navbar"; the mark was 86% of the field's height, so centring it left almost
+  nothing above it. Same rule, same 86%, on a 1280px screen gave a 7px gap.
+- Pushing a 560px mark to `top: 25%` of a 650px field would end it at `25% + 86% = 111%` — past the
+  bottom edge, where `overflow: hidden` slices it off at the section boundary. Moving it alone was not an
+  option; it had to get smaller too.
+- The fix sizes the mark from the field's height: `height: 70%; width: auto`. An `<svg>` with a `viewBox`
+  has an **intrinsic aspect ratio** (141:152 here), so a definite height plus `width: auto` produces the
+  matching width. That is the same rule that makes `img { height: 300px; width: auto }` keep a photo's
+  proportions.
+- A percentage height resolves even though `.hero-field` has no `height` set. For an absolutely
+  positioned child, the containing block is the parent's padding box, which is laid out before the
+  percentage is needed — so "70% of however tall the field turned out" is valid.
+- `width: 70%` would **not** have worked: that is 70% of the field's *width* and says nothing about
+  fitting vertically.
+- The horizontal half is the same rule seen from the other side. `right: -6%` resolved against
+  `.hero-field`, which stretches to the window, so the offset grew with the window. To make the mark belong
+  to the copy, the SVG moved into `.hero-stage.wrap` — an absolutely positioned layer with the *same width
+  and centring as `.hero-inner`* (`inset: 0` for height, `.wrap` for `width: min(1120px, 100% - 48px)` and
+  `margin: 0 auto`). Now `right: -15%` is 15% of 1120px = 168px past the copy's right edge at every zoom.
+- The second term in `min(15%, (100vw - 100%) / 2)` reads the empty margin outside the column. `100vw` is
+  the window, `100%` (inside `right`) is the stage, so the difference halved is the gutter either side of
+  the copy. When the window is barely wider than the copy that gutter is ~24px, and 168px of bleed would
+  push most of the shape off-screen; the `min()` shrinks the bleed to fit. At 1440px the gutter is 160px,
+  so it wins over 168 and the mark ends flush with the edge.
+
+**The fix.**
+
+```css
+/* before — one box for both axes: the field, i.e. the window */
+top: 46%;
+transform: translateY(-50%);
+right: -6%;
+width: min(46vw, 520px);
+
+/* after — vertical against the field, horizontal against the copy */
+.hero-stage { position: absolute; inset: 0; }        /* + .wrap = the copy's box */
+.hero-mark  {
+  top: 25%;                                          /* top edge a quarter down the field */
+  height: 70%;                                       /* the space left below that offset */
+  width: auto;                                       /* width follows the 141:152 ratio */
+  right: calc(-1 * min(15%, (100vw - 100%) / 2));     /* bleed past the copy, capped by the gutter */
+}
+```
+
+The mobile query (`max-width: 760px`) keeps `width: min(46vw, 520px)` at `top: 24%`. On a 430px screen the
+field is only 487px tall and the old mark was already 213px, so its top was *already* about 24% down —
+`height: 70%` there would have made it 341px, bigger than it has ever been behind the copy.
+
+**How to prove it.** In DevTools select `.hero-mark`, open Computed, and read `width` / `height` — the
+ratio is 0.928 at every desktop size. In the console:
+
+```js
+const box = (s) => document.querySelector(s).getBoundingClientRect();
+const hero = box('.hero-field'), inner = box('.hero-inner'), mark = box('.hero-mark');
+[mark.top - hero.top, hero.bottom - mark.bottom];   // [≈25% of hero.height, ≈5% of it]
+[mark.left - inner.right, inner.left, inner.right]; // same distance from the copy at any window size
+```
+
+Resize from 1440 → 1024 → 820: both vertical gaps stay proportional, no clipping. Then emulate a wide
+window (2400px) or zoom out: the gap from `.hero-inner`'s right edge stays 168px while the gap from the
+window edge grows, which is the whole point. Also select `.hero-stage` and confirm its box is identical to
+`.hero-inner`'s — at 1440 that is `152.5 → 1272.5` for both. Checked in Chrome and Firefox (the SVG picks
+up its width from the height in both).
+
+**If you remember one thing.** A percentage offset is measured from the positioned parent's box, not the
+viewport — so choose the box that should own the element. A mark nearly as tall as that box also cannot
+move without resizing.
+
+**Failure mode.** The mark now scales with the field, so longer hero copy makes it larger, never clipped.
+Below 760px the override goes back to viewport width; a much shorter mobile field there could clip the
+bottom again.
+
+---
+
+## 23. Map of what we built → what it teaches
 
 | Thing in the repo | Concept |
 |---|---|
@@ -809,6 +906,8 @@ auto margins, `white-space: nowrap`.
 | One navbar for five pages | `fetch` + `innerHTML` (section 13) |
 | Panel opens under 720px | Media queries + `matchMedia` (section 14) |
 | Blue field starts at y=0 | Box model + paint order (sections 1–2) |
+| Hero mark a quarter down the field | Percentage offsets vs viewport, intrinsic ratio (section 22) |
+| Hero mark stays with the copy at 50% zoom | Containing blocks, `100vw` vs `100%` in `right` (section 22) |
 | 256px PNG in a 46px slot | Intrinsic size, DPR (section 17) |
 | `aria-pressed` on theme buttons | Accessible state (section 18) |
 

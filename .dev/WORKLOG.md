@@ -15,6 +15,251 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.23.2026 02:17pm CDT — DESIGN.md: theme-aware navbar spec, tesseract as precedent
+
+### Overview
+
+Tesseract's navbar now follows the page theme, and the owner asked to record that as the precedent for the
+parent nav. Added `DESIGN.md` §6.1.1 with the dark/light surface token table and the behavioural rules,
+pointed §6.1 at it, and noted in §5.4 that the parent's `720px` collapse is its own measurement rather than a
+universal nav breakpoint. Documentation only; no parent CSS or markup changed, because the parent pill is
+still white in both themes.
+
+### What changed
+
+- **`.dev/DESIGN.md` §6.1** — "Floating white pill" became "Floating pill … Currently white in both themes;
+  §6.1.1 is the theme-aware target."
+- **`.dev/DESIGN.md` §6.1.1** (new) — status *proposed for the parent*; `--nav-*` token table for light and
+  dark; rules for one geometry, translucent surface + `backdrop-filter`, host-owned active state, pinned
+  brand marks, single-lockup hover, host-accent focus ring, and content-driven collapse.
+- **`.dev/DESIGN.md` §5.4** — clarifies that `720px` belongs to the parent's four-link pill and tesseract's
+  five-link pill collapses at `950px`.
+
+### Decisions
+
+- **Spec, not implementation.** The parent nav has not been migrated, so the section is explicitly marked
+  proposed and §6.1 remains the description of what ships today. The doc's conflict rule stays honest.
+- **Tesseract is the source of truth for the values.** The token table copies the shipped `--nav-*` block in
+  `tesseract/styles.css`, including the dark `rgba(23,26,.82)` glass surface and `14px` blur, rather than
+  inventing parent values.
+- **Active state is host-owned.** `--nav-active-ink` / `--nav-active-bg` let a product use its accent
+  (tesseract purple) while the parent keeps blue. Shared geometry, product accent.
+- **Marks stay constants for now.** The parent blue and tesseract purple do not theme. Whether they should
+  brighten on dark is recorded as open in tesseract's `.dev/TODO.md`, not decided here.
+- **Breakpoint is measured, not copied.** Tesseract's `950px` is a consequence of five links measuring
+  ~909px; the parent's four-link pill still fits at `720px`.
+
+### Validation
+
+- Cross-checked every value in §6.1.1 against `tesseract/styles.css` (`--nav-*` block, `.nitrox-nav`,
+  `.nav-brand-home`, `.nav-nitrox-link`, `.theme-btn`) and `tesseract/script.js` (`markActive`,
+  `min-width: 951px`).
+- No rendering check: the parent nav is unchanged, so §6.1.1 cannot be validated on the parent until it is
+  migrated. Tesseract's implementation is validated in its own worklog.
+- **Not checked:** parent contrast on the blue field / paper with the proposed dark tokens; those values
+  assume a near-black product canvas.
+
+### Follow-ups
+
+- Migrate the parent pill to the §6.1.1 tokens, then update §6.1 and remove the proposed status.
+- Re-check active blue `#3232ff` / `#9b9bff` on the parent's actual surfaces before shipping.
+- Decide whether brand marks theme (cross-repo with tesseract `.dev/TODO.md`).
+
+---
+
+## 10.23.2026 03:45pm CDT — Hero watermark: anchored to the copy, not the window
+
+### Overview
+
+Continues *Hero watermark: a quarter down the field* (10.23, 02:10pm). That pass fixed the vertical edge
+but left the mark anchored to the hero **field** (`right: -6%`), and the field is as wide as the window. At
+50–80% zoom the mark slid out to the right edge of the screen, ~700px from the copy. The owner also wanted
+it ~5% closer to the text block than the 02:10 result. Now: the mark is positioned against the text column
+on both axes, so its distance from the copy is constant at any window size or zoom.
+
+### What changed
+
+- **`index.html`** — the SVG is wrapped in `<div class="hero-stage wrap" aria-hidden="true">` instead of
+  sitting directly in `.hero-field`. No path or visual change.
+- **`home.css` `.hero-stage`** (new) — `position: absolute; inset: 0`, plus `.wrap` for
+  `width: min(1120px, 100% - 48px)` and centring. Its box is identical to `.hero-inner`'s.
+- **`home.css` `.hero-mark`** — `right: calc(-1 * min(15%, (100vw - 100%) / 2))` (was `-6%` of the field).
+  Vertical values unchanged from the 02:10 pass: `top: 25%`, `height: 70%`, `width: auto`.
+- **`.dev/DESIGN.md` §6.4** — spec now describes the stage layer, the column-relative right edge, the cap,
+  and the old geometry as history.
+- **`.dev/human-learning.md` §22** — extended with the horizontal half of the same rule, the `100vw` vs
+  `100%` distinction, and the new verification snippet.
+
+### Decisions
+
+- **The stage layer, not `right: -15%` on the field.** The field fills the window, so any percentage of it
+  is a percentage of the window. The stage reuses `.wrap`, the same formula `.hero-inner` uses, so the two
+  boxes cannot drift apart if the column width ever changes.
+- **15% of the column = 168px past the copy's right edge.** At 1440 that moved the mark 86px left of the
+  02:10 position (left edge 1104 → 1018), which is the requested ~5–6% closer to the text, and it is the
+  same distance at 1500, 1920 and 2360.
+- **Cap the bleed with the page gutter.** A fixed 168px bleed pushed a third of the shape off-screen once
+  the window was barely wider than the 1120px column (1180 wide → 138px clipped). `min(15%, (100vw - 100%) /
+  2)` stops the bleed at the empty margin, so the shape stays whole at narrow widths and still detaches
+  from the edge once the window is wide. `100%` inside `right` is the stage; `100vw` is the window.
+- **Mobile keeps its own size.** `min(46vw, 520px)` at `top: 24%` below 760px, so phones look as they did.
+
+### Validation
+
+- Headless Chrome at 1180 / 1440 / 1500 / 1920 / 2360 / 820 / 430: mark top at 24–25% of the field height,
+  bottom gap 26–32px on desktop, no clipping, and `.hero-stage`'s box is byte-identical to `.hero-inner`'s
+  (152.5 → 1272.5 at a 1440 window).
+- Distance from the copy's right edge to the mark's right edge: 168px at 1440 (capped by the 160px gutter),
+  168px at 1500/1920/2360. At 2360 that puts the mark 452px inside the window instead of at its edge — the
+  behaviour the owner asked for.
+- SVG ratio `width/height` stayed 0.928 at every desktop size; Firefox headless at 1440 renders the same
+  shape and position.
+- With a classic 15px scrollbar (`innerWidth 1440`, `scrollWidth 1425`) the cap reads `100vw` as 1440 and
+  the mark can clip ~8px at the edge; on overlay-scrollbar platforms it is exact. Not fixed: it is at the
+  window edge either way.
+- Not checked: Safari/WebKit; the owner's exact zoom/window combination beyond the emulated widths.
+
+### Subtasks
+
+- [x] Anchor the mark to the content column on both axes
+- [x] Move it ~5% closer to the copy than the 02:10 position
+- [x] Keep the whole shape on screen at narrow widths
+- [x] Update `DESIGN.md` §6.4 and learning §22
+- [ ] Owner look: is a 168px bleed past the copy the right amount, or should the right edge sit flush with
+      the text block?
+
+### Follow-up
+
+- The old bottom-of-hero `overflow: hidden` still clips the mark horizontally by design; it is only a
+  bleed, never a sizing constraint now.
+- If the copy column width changes, `.hero-stage` follows through `.wrap` — do not give it its own width.
+
+---
+
+## 10.23.2026 02:10pm CDT — Hero watermark: a quarter down the field, sized to fit
+
+### Overview
+
+The hourglass outline behind the hero copy sat with its top edge 7–19px under the navbar at every desktop
+width, so it read as pinned to the top of the page. The ask was to anchor it about 25% of the way down the
+blue field instead of against the edge. Changed: `.hero-mark` in `home.css`, its spec in `DESIGN.md` §6.4,
+and a new learning section. No markup changed; the SVG path is untouched.
+
+> The horizontal anchor from this pass (`right: -6%` of the field) was replaced later the same day — see
+> *Hero watermark: anchored to the copy, not the window* (03:45pm). The vertical rules here still stand.
+
+### What changed
+
+- **`home.css` `.hero-mark`** — `top: 25%` (top edge, no `translateY`), `height: 70%`, `width: auto`.
+  The old rule was `top: 46%` centered with `translateY(-50%)` and `width: min(46vw, 520px)`.
+- **`home.css` new `@media (max-width: 760px)` block** — keeps the old viewport-width size
+  (`min(46vw, 520px)`) at `top: 24%`, which is where the mark already sat on phones.
+- **`.dev/DESIGN.md` §6.4** — spec rewritten to the new geometry, with the old values noted.
+- **`.dev/human-learning.md` §22** — why percentage offsets resolve against the parent, and why a mark
+  that was 86% of its field's height could not simply be moved down.
+
+### Decisions
+
+- **Shift and resize together, not just shift.** At 1440px the mark was 560px tall in a 650px field. A
+  pure `top: 25%` would end it at 111% of the field, and `overflow: hidden` would slice it at the black
+  boundary. `height: 70%` is the largest size that still leaves a bottom gap at a 25% top offset.
+- **Size from the field's height, not the viewport width.** `height: 70%; width: auto` uses the SVG's
+  intrinsic 141:152 ratio and keeps the mark proportional to the copy at every width (measured bottom gap
+  stays ≈5%). A width-based value cannot know how tall the field turned out.
+- **Phones keep the old size.** At 430px the mark was already ~24% down because the field is short; making
+  it 70% of the field would have enlarged it to 341px behind the title. `top: 24%` plus the old width
+  keeps that case pixel-identical apart from a ~4px shift.
+- **Visible trade-off:** the mark is now ~422px wide on a 1440 screen instead of 520px. Keeping the old
+  size and the new offset would have meant a clipped logo.
+
+### Validation
+
+- Headless Chrome at 1440/1280/1024/820/761/760/640/430/390: mark top sits at 24–25% of the field height,
+  bottom gap 5–8% on desktop, no clipping anywhere; widths scale 422 → 340 → 350 → 179 as the field
+  changes.
+- Ratio check: `width / height` stayed 0.928 at every desktop size, i.e. the SVG was not squashed.
+- Firefox headless at 1440: same position and width (422px), so `width: auto` with a percentage height
+  resolves correctly there too.
+- Both themes were not re-checked separately: the hero field is fixed blue with white copy in both.
+  Contrast is unchanged (`opacity: 0.18` is decorative, `aria-hidden`).
+- Not checked: Safari/WebKit, or the owner's exact screen and zoom from the screenshots.
+
+### Subtasks
+
+- [x] Re-anchor the mark at 25% below the navbar
+- [x] Size it to fit the field without clipping
+- [x] Keep the phone layout unchanged
+- [x] Update `DESIGN.md` §6.4 and add learning §22
+- [ ] Owner look: is 70% of the field the right visual weight, or should the hero grow instead?
+
+### Follow-up
+
+- If the hero copy gets longer, the mark grows with the field (70%) instead of clipping — that is
+  deliberate.
+- The mobile override is the only place the old `46vw` ratio survives; if the phone hero changes, revisit
+  it together with this rule.
+
+---
+
+## 10.23.2026 09:00am CDT — Misc icons archive: every ICNS converted, site PNGs mirrored back
+
+### Overview
+
+Continues *Community app icons: ICNS to PNG* (10.22, 10:49pm). Only two `.icns` files had been converted
+and their PNGs lived in the repo. Now every `.icns` in `~/Pictures/@MISC ICONS/` has been converted in its
+own brand folder, and the six site PNGs were copied back, so the misc-icons folder holds the complete set.
+No site file changed in this pass; `community.html` already pointed at the 256px PNGs from the earlier swap.
+
+### What changed
+
+- **`~/Pictures/@MISC ICONS/discord/`** (new PNGs): `discord-golden-gate-{256,512,1024}.png`,
+  `discord-sunrise-{256,512,1024}.png`, `discord-cat-{256,512,1024}.png`, plus copies of
+  `discord-tahoe-{256,512,1024}.png` from the repo.
+- **`~/Pictures/@MISC ICONS/github/`** (new PNGs): `github-macos27-{16,32,256,512,1024}.png`, plus copies
+  of `github-golden-gate-{256,512,1024}.png`.
+- **`.dev/docs/community-app-icons.md`**: added the full source→output map, the cat-icon naming caveat, the
+  16/32 note, and corrected the now-stale "not wired into the page" caveat.
+
+### Decisions
+
+- **Convert in place, per brand folder.** The owner asked for the PNGs to stay with the sources, so no fifth
+  copy of the archive exists in the repo and no `png/` subfolder was created.
+- **Copy, do not move, the six site PNGs.** Both places keep a usable set: the repo has exactly what the page
+  loads, the archive has everything for browsing.
+- **Descriptive names win over source names.** `Discord_TlgTSw5Dyi-b251516aac.icns` contains a cat-face
+  artwork, so its outputs are `discord-cat-*`; the opaque hash would be accurate but unreadable. The mapping
+  is recorded in the doc so the rename is reversible.
+- **Keep 16/32 from the macOS27 file.** Only that `.icns` carries `is32`/`il32`; discarding them would lose
+  the only favicon-scale assets in the archive.
+- **No new page work.** This is asset plumbing; wiring or re-picking icons is the owner's cleanup pass.
+
+### Validation
+
+- `magick identify` on all 20 archive PNGs: expected geometry (16/32/256/512/1024), 8-bit sRGB, alpha.
+- `cmp` confirms the six copied PNGs are byte-identical to `assets/community/`.
+- MD5 of all six `.icns` files re-checked after conversion; none changed.
+- Removed a duplicate `discord-clyde-*` set left by the interrupted first run after confirming identical
+  MD5s with `discord-cat-*`.
+- Not checked: visual QA of the 16/32 GitHub sizes, or whether the archive naming survives the owner's
+  cleanup pass.
+
+### Subtasks
+
+- [x] Convert the four remaining `.icns` files
+- [x] Name outputs by brand + generation + size
+- [x] Mirror the six repo PNGs into the archive
+- [x] Remove the duplicate naming set
+- [x] Update `.dev/docs/community-app-icons.md`
+- [ ] Owner cleanup pass: keep/drop sizes, re-pick the community pair if a matching generation matters
+
+### Follow-up
+
+- The archive can now answer "what icons do we have" without opening `assets/community/`.
+- `discord-cat-*` is a provisional name for artwork that is not an official Discord mark.
+- The two `*-glass.svg` files remain unused in `assets/community/`; deleting tracked assets was left alone.
+
+---
+
 ## 10.23.2026 08:50am CDT — Repo `AGENTS.md`: read precedent before editing
 
 ### Overview

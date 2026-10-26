@@ -86,6 +86,22 @@ The sources vary in type names and fields. The schema needs reconciliation and v
 |---|---|---|---|---|
 | App stack | No decided standard yet | Tauri 2 + React + TS + Vite + Tailwind proposed | Desktop plus web from one codebase | Proposed |
 | Content storage | Readable, portable formats | Markdown + YAML, JSON layout manifests | Portability and offline use | Proposed |
+| Website theme | Dark canvas, light picker scoped to the landing page | Dark **and** light on every page; device / dark / light picker; shares the `nitrox-theme` key with the parent site | Same origin, so one brand preference should follow a visitor between the two sites; the palette is one `light-dark()` token block rather than a duplicated dark set | Decided |
+| Website light canvas | Warm-white surface | Lavender `#f4effc` with dark ink | White cards and the white nav pill need a tinted canvas; grain stays a dark-only treatment | Decided |
+| Website navigation | Floating white pill | Same pill, unchanged: tesseract brand, nitrox mark, product links | Shared chrome, not a lookalike | Inherited |
+| Website display type | Parent marketing faces | EB Garamond for headings, Instrument Sans for UI | Product voice; already shipped on the landing page | Decided |
+| Website icons | Phosphor via CDN | Phosphor duotone vendored inline as a `<symbol>` sprite | Offline rendering with no CDN dependency | Decided |
+
+Site-level implementation notes, decisions and rollback live in the tesseract repo:
+`.dev/docs/navbar-theme-system.md` and `.dev/WORKLOG.md`.
+| Site chrome | White floating pill navbar, nitrox blue active link | Same pill, with tesseract mark + wordmark and the nitrox link kept beside it | One brand; a visitor crossing from the parent site should not see a different header | In the site, 23.10.2026 |
+| Theme states | Device / dark / light, tokens duplicated per theme | Same three states, one `light-dark()` token block driven by `color-scheme` | The picker has a third state (`device`); one block cannot drift between themes | In the site, 23.10.2026 |
+| Theme preference | `nitrox-theme` in localStorage | Same key, same three values | Same GitHub Pages origin — one preference follows the visitor across the brand | In the site, 23.10.2026 |
+| Light surface | Warm white | Lavender `#f4effc` with dark ink | The white cards and white pill need a tinted ground; keeps the purple accent readable | In the site, 23.10.2026 |
+| Grain texture | Dark canvas only | Dark canvas only; `background-image: none` in light and in device+light | Parent rule: grain is a dark treatment, not a light one | In the site, 23.10.2026 |
+| Display type | Parent type scale | EB Garamond for display headings, Instrument Sans for UI | Existing tesseract voice; the product keeps one editorial face | In the site, 23.10.2026 |
+| Icons | Phosphor duotone from the parent asset set | Phosphor duotone vendored inline as a `<symbol>` sprite (MIT) | The site must render with no network beyond its own origin | In the site, 23.10.2026 |
+| Theme picker scope | Landing page only | Every page | The preference is brand-wide, so the control that changes it is not page-specific | In the site, 23.10.2026 |
 
 Tesseract is currently the reference app doc and the source of much of the technical precedent. Its proposed stack is not yet a Nitrox standard; see [00-docs-meta.md](00-docs-meta.md#3-nitrox-technical-precedent).
 

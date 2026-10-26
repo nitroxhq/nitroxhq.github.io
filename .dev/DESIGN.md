@@ -402,7 +402,8 @@ On narrow screens the asymmetry collapses: single column at `860px`, plate offse
 | `prefers-reduced-motion` | Reveals and transitions disabled |
 
 Breakpoints are content-driven. Do not add a new one to fix one awkward string; fix the type or the
-measure first.
+measure first. The `720px` nav value is the parent's four-link pill; product navs measure their own content
+— tesseract's five-link pill collapses at `950px` (see §6.1.1).
 
 ### 5.5 Hairlines and surface boundaries
 
@@ -423,8 +424,8 @@ instead of re-deriving it.
 
 Source: `navbar.html`, `styles.css`.
 
-- Floating white pill, centered, `width: max-content` (hugs its contents), `margin: 28px auto 3rem`,
-  `max-width: calc(100vw - 32px)`.
+- Floating pill, centered, `width: max-content` (hugs its contents), `margin: 28px auto 3rem`,
+  `max-width: calc(100vw - 32px)`. Currently white in both themes; §6.1.1 is the theme-aware target.
 - Layout is a plain flex row: brand, links, theme picker, separated by `gap: 3rem`. Because the pill is only
   as wide as its content, no auto margins or equal-width grid columns are needed; pages without the theme
   picker end after the links instead of carrying an empty right half.
@@ -439,6 +440,55 @@ Source: `navbar.html`, `styles.css`.
   nav's top margin stays inside the blue box (margin collapsing would expose the body background).
 
 **Do not** restyle the nav per page. It is shared chrome by design.
+
+#### 6.1.1 Theme-aware nav surface (spec; tesseract is the precedent)
+
+**Status: proposed for the parent.** Tesseract implements this today; the parent pill has not been
+migrated, so the current parent truth remains §6.1. When it lands here, update §6.1 and remove the
+"currently white in both themes" note.
+
+Tesseract's navbar is the reference implementation for a pill that follows the page theme. The parent pill
+described above is still white in both themes; this subsection is the target for migrating it. Geometry,
+brand order and the picker do not change between themes — only the surface and ink tokens resolve.
+
+| Role | Light | Dark |
+|---|---|---|
+| `--nav-bg` | `rgba(255, 255, 255, 0.92)` | `rgba(23, 23, 26, 0.82)` |
+| `--nav-ink` | `#0b0b10` | `#f4effc` |
+| `--nav-ink-hover` | `rgba(11, 11, 16, 0.30)` | `rgba(255, 255, 255, 0.62)` |
+| `--nav-line` | `rgba(11, 11, 16, 0.08)` | `rgba(255, 255, 255, 0.12)` |
+| `--nav-shadow` | `rgba(11, 11, 16, 0.14)` | `rgba(0, 0, 0, 0.55)` |
+| `--nav-hover-bg` | `rgba(11, 11, 16, 0.06)` | `rgba(255, 255, 255, 0.08)` |
+| `--nav-track-bg` | `rgba(11, 11, 16, 0.05)` | `rgba(255, 255, 255, 0.07)` |
+| `--nav-control-ink` | `rgba(11, 11, 16, 0.50)` | `rgba(255, 255, 255, 0.55)` |
+| `--nav-pressed-bg` | `#ffffff` | `#2c2c30` |
+| `--nav-pressed-shadow` | `rgba(11, 11, 16, 0.20)` | `rgba(0, 0, 0, 0.50)` |
+| `--nav-active-ink` | host accent, dark variant | host accent, light variant |
+| `--nav-active-bg` | host accent at 13% | host accent at 22% |
+
+- **One geometry, two surfaces.** Keep `border-radius: 100vmax`, `width: max-content`,
+  `max-width: calc(100vw - 32px)`, `10px 22px` padding and `margin: 28px auto 3rem` in both themes. A theme
+  swap must not move the pill.
+- **Blur, not a solid slab.** The surface is translucent and carries
+  `backdrop-filter: blur(14px) saturate(1.2)` (`-webkit-` prefix included), so grain or a blue field behind
+  it stays a texture. Browsers without backdrop support get the flat rgba surface, which must still pass
+  contrast.
+- **Active state belongs to the host.** `--nav-active-ink` / `--nav-active-bg` are the only state colours a
+  product may override. Tesseract resolves them to its accent — `#7a3bc4` on light, `#a161ea` on dark, on a
+  13%/22% purple pill. The parent keeps `#3232ff` on light and `#9b9bff` on dark.
+- **Brand marks are constants.** Do not theme the mark itself. Tesseract's `#a161ea` and the parent's
+  `#3232ff` stay identical in both themes for now; whether marks should brighten on dark is an open
+  question (tracked in tesseract's `.dev/TODO.md`).
+- **Hover is one lockup, one motion.** Mark + wordmark sit inside a single anchor. Hover lifts the whole
+  lockup `1px` and lightens the wordmark to `--nav-ink-hover`; the mark shifts to a lighter tint of the same
+  hue. Never animate the two halves separately, and never darken grey → black.
+- **Focus uses the host accent.** The ring is `2px solid var(--nav-active-ink)`, offset `2px` (`1px` on icon
+  buttons). A blue parent ring on a product-coloured nav is wrong.
+- **Collapse is content-driven.** The parent's four-link pill still fits at `720px`; tesseract's five links
+  measure ~909px and collapse at `950px`. Measure the rendered pill before copying either number.
+
+Source of truth for the implemented precedent: `tesseract/styles.css` (`--nav-*` block and `.nitrox-nav`
+rules), `tesseract/navbar.html`, `tesseract/script.js` (`markActive`, breakpoint cue).
 
 ### 6.2 Theme picker
 
@@ -466,8 +516,18 @@ name collision; see §13.3.
 ### 6.4 Hero field
 
 - Blue `--blue`, white text, `overflow: hidden`.
-- Hourglass outline watermark at `right: -6%`, vertically `46%`, width `min(46vw, 520px)`, opacity `0.18`,
-  stroke `white` at `0.6`.
+- Hourglass outline watermark: lives in a `.hero-stage.wrap` layer that is the same width as `.hero-inner`
+  (`min(1120px, 100% - 48px)`, centred, `inset: 0`), so it is anchored to the **content column**, not the
+  window. Top edge `25%` down the field measured from the navbar, `height: 70%` of the field with
+  `width: auto` so the 141:152 ratio holds, opacity `0.18`, stroke `white` at `0.6`.
+- Right edge: `calc(-1 * min(15%, (100vw - 100%) / 2))` — 15% of the column past its right edge (the bleed
+  the 100%-zoom layout wants), capped by the empty margin outside the column so the mark stays whole when
+  the window is barely wider than the copy. It never moves with the window independently of the copy.
+- Below `760px`: former viewport-width size, `min(46vw, 520px)` at `top: 24%` (the short phone field already
+  put it about a quarter down).
+- History: until 10.23.2026 it was a direct child of the field, `top: 46%` + `translateY(-50%)`,
+  `width: min(46vw, 520px)`, `right: -6%` of the **field**. That pinned its top edge within ~10px of the
+  navbar on desktop and sent it to the window edge whenever the page was zoomed out.
 - Eyebrow: mono, `0.7rem`, `0.12em` tracking, `0.75` opacity, with a 6px dot before it.
 - Title max `15ch`; lede max `46ch` at `0.9` white.
 - The watermark is decorative: `aria-hidden="true"`, `pointer-events: none`.
