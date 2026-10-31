@@ -15,6 +15,83 @@ Newest entries first. One entry per task or session. Every entry starts with an 
 
 ---
 
+## 10.27.2026 09:06pm CDT — Navbar follows the theme (tesseract precedent)
+
+### Overview
+
+The owner asked for the navbar to have a dark mode "like tesseract's". This is the migration that
+`DESIGN.md` §6.1.1 had already specced on 10.23.2026 but never implemented: the parent pill was a solid
+white pill in both themes, hardcoded to `--white` and `--text-black`, while tesseract's nav resolves its
+surface and ink from `--nav-*` tokens. The nav now follows the page theme — obsidian glass on the dark
+field, translucent white glass on paper — with geometry, brand order and the picker unchanged.
+
+### What changed
+
+- **`styles.css` token blocks** — added `--nav-bg`, `--nav-ink`, `--nav-ink-hover`, `--nav-line`,
+  `--nav-shadow`, `--nav-hover-bg`, `--nav-track-bg`, `--nav-control-ink`, `--nav-pressed-bg`,
+  `--nav-pressed-shadow`, `--nav-active-ink`, `--nav-active-bg` to `:root` (dark), and the light column to
+  both `html[data-theme="light"]` and the `prefers-color-scheme: light` branch of `html[data-theme="device"]`.
+  The repo's existing model is `data-theme` + a media query, not `light-dark()`, so the tokens follow that.
+- **`.nitrox-nav`** — background, ink and shadow now read tokens; added
+  `backdrop-filter: blur(14px) saturate(1.2)` (plus `-webkit-` prefix).
+- **Nav children** — `.nav-buttons`, `.nav-brand-text`, `.nav-toggle`, `.theme-btn`, `.nav-theme` and the
+  mobile panel separators all consume tokens instead of `--text-black` / `rgba(0,0,0,…)`.
+- **Active link** — was blue text on a neutral grey pill; now `--nav-active-ink` on `--nav-active-bg`, the
+  host-accent tint §6.1.1 asks for.
+- **Focus** — new `.nav-buttons` / `.nav-brand-text` / `.nav-logo-link` `:focus-visible` ring using
+  `--nav-active-ink`. The UA default is not reliably visible on the obsidian pill, and inner pages had no
+  nav-link focus style of their own.
+- **Removed** `html[data-theme="light"] .nitrox-nav { box-shadow: … }`; the light shadow is now a token.
+- **`.dev/DESIGN.md`** — §6.1 describes the shipped theme-aware pill; §6.1.1 is "implemented" instead of
+  "proposed", with the parent's active-accent values and the measured contrast in the doc.
+
+### Decisions
+
+- **18% active tint on dark, not tesseract's 22%.** At 22% the active ink `#9b9bff` measured **4.37:1** on
+  its own tinted pill — just under AA for 16.8px/600 text. 18% gives **4.73:1** and the pill stays visible.
+  Recorded in the token block and in §6.1.1 rather than silently diverging from the copied table.
+- **No markup change.** Tesseract wraps mark + wordmark in one anchor; the parent still ships two. Hover
+  therefore animates each half on its own hover, with the same `1px` lift, wordmark to `--nav-ink-hover`
+  and mark to `opacity: .8`. Merging the anchors is a separate accessibility/behaviour decision, not part of
+  a colour migration.
+- **Brand mark left constant**, per §6.1.1. It is the weak point: `#3232ff` on the dark pill measures
+  **2.34:1**, so the logo reads muddy on dark. Changing it means a second asset or an inline SVG — that is
+  the owner's call, so it is a follow-up rather than an unrequested asset change.
+- **`--nav-ink-hover` is now used**, for the wordmark hover, replacing the old `opacity: .8`, so the token
+  is not dead.
+- **The `:3` BSOD tooltip stays black-on-white**, unchanged; it is a deliberate one-off, not a nav surface.
+
+### Validation
+
+- Served over `python3 -m http.server` and driven by Chrome DevTools Protocol at **1440×900** and
+  **390×844**, with the picker clicked (not just `data-theme` forced), on `index.html` and `about.html`,
+  plus the mobile panel open in both themes.
+- **Geometry is unchanged**: the pill's `getBoundingClientRect()` is identical in light and dark
+  (`x 359.2, y 28, 721.6 × 53.9`), so a theme swap does not move it.
+- Computed styles in dark: `background-color: rgba(23, 23, 26, 0.82)`, `color: rgb(244, 239, 252)`,
+  `backdrop-filter: blur(14px) saturate(1.2)`, active link `rgb(155, 155, 255)` on
+  `rgba(155, 155, 255, 0.18)`.
+- Contrast (composited over the blue field, no blur): dark ink **14.3:1**, dark control icons **5.8:1**,
+  dark active ink on its pill **4.73:1**; light ink **17.3:1**, light control icons **3.6:1**, light active
+  ink on its pill **4.9:1**.
+- Keyboard: real `Tab` presses on `about.html` in dark land on logo, wordmark and each link with a visible
+  `2px solid rgb(155, 155, 255)` ring at `2px` offset.
+- Not checked: Firefox/Safari `backdrop-filter` fallback (the flat `rgba` surface is what those get),
+  pointer hover states (headless), and `projects`/`community` beyond the shared CSS they load.
+
+### Follow-ups
+
+- Decide whether the brand mark themes: `assets/white-logo-svg.svg` already exists, so dark could use it
+  without new art. Cross-repo with tesseract's `.dev/TODO.md`.
+- The light-mode mobile panel is now blue-tinted glass over the hero (0.92 white over the blue field). That
+  is the spec'd translucent surface, but if it reads too blue the fix is an opaque `--nav-bg` on the open
+  panel, which would be a deliberate deviation.
+- Theme picker is still homepage-only; §3.4 records that as a deliberate first step.
+
+— Model: DeepSeek V4.1 Flash Free (opencode, provider: opencode)
+
+---
+
 ## 10.23.2026 02:17pm CDT — DESIGN.md: theme-aware navbar spec, tesseract as precedent
 
 ### Overview

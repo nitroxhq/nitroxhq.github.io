@@ -425,13 +425,15 @@ instead of re-deriving it.
 Source: `navbar.html`, `styles.css`.
 
 - Floating pill, centered, `width: max-content` (hugs its contents), `margin: 28px auto 3rem`,
-  `max-width: calc(100vw - 32px)`. Currently white in both themes; §6.1.1 is the theme-aware target.
+  `max-width: calc(100vw - 32px)`. The surface follows the page theme — a near-black glass pill on the dark
+  field, a translucent white pill on paper; tokens and rules in §6.1.1.
 - Layout is a plain flex row: brand, links, theme picker, separated by `gap: 3rem`. Because the pill is only
   as wide as its content, no auto margins or equal-width grid columns are needed; pages without the theme
   picker end after the links instead of carrying an empty right half.
 - Contents: brand logo + wordmark, links (home, projects, community, about, `:3`), theme picker.
-- Link style: Instrument Sans, `1.05rem`, 600, pill hover `rgba(0,0,0,.06)`, active blue text.
-- Shadow: `0 8px 20px rgba(0,0,0,.18)`; lighter on paper pages.
+- Link style: Instrument Sans, `1.05rem`, 600, hover `var(--nav-hover-bg)`, active `var(--nav-active-ink)` on
+  `var(--nav-active-bg)`.
+- Shadow: `0 8px 20px var(--nav-shadow)`, plus `backdrop-filter: blur(14px) saturate(1.2)`.
 - The nav is injected by `script.js` via `fetch('./navbar.html')`. It requires HTTP; `file://` will fail.
 - Active state is computed from the current filename, not authored per page.
 - `#nav-placeholder` is a direct child of `<body>` on every page that has the nav — never inside `.page`.
@@ -441,15 +443,12 @@ Source: `navbar.html`, `styles.css`.
 
 **Do not** restyle the nav per page. It is shared chrome by design.
 
-#### 6.1.1 Theme-aware nav surface (spec; tesseract is the precedent)
+#### 6.1.1 Theme-aware nav surface (implemented; tesseract is the precedent)
 
-**Status: proposed for the parent.** Tesseract implements this today; the parent pill has not been
-migrated, so the current parent truth remains §6.1. When it lands here, update §6.1 and remove the
-"currently white in both themes" note.
-
-Tesseract's navbar is the reference implementation for a pill that follows the page theme. The parent pill
-described above is still white in both themes; this subsection is the target for migrating it. Geometry,
-brand order and the picker do not change between themes — only the surface and ink tokens resolve.
+**Status: implemented in the parent, 10.27.2026.** `styles.css` carries the `--nav-*` tokens in `:root`
+(dark, the default) and in both light blocks (`[data-theme="light"]` and the `prefers-color-scheme: light`
+branch of `[data-theme="device"]`). Geometry, brand order and the picker do not change between themes — only
+the surface and ink tokens resolve.
 
 | Role | Light | Dark |
 |---|---|---|
@@ -463,8 +462,8 @@ brand order and the picker do not change between themes — only the surface and
 | `--nav-control-ink` | `rgba(11, 11, 16, 0.50)` | `rgba(255, 255, 255, 0.55)` |
 | `--nav-pressed-bg` | `#ffffff` | `#2c2c30` |
 | `--nav-pressed-shadow` | `rgba(11, 11, 16, 0.20)` | `rgba(0, 0, 0, 0.50)` |
-| `--nav-active-ink` | host accent, dark variant | host accent, light variant |
-| `--nav-active-bg` | host accent at 13% | host accent at 22% |
+| `--nav-active-ink` | `#3232ff` (tesseract `#7a3bc4`) | `#9b9bff` (tesseract `#a161ea`) |
+| `--nav-active-bg` | `rgba(50, 50, 255, 0.13)` | `rgba(155, 155, 255, 0.18)` |
 
 - **One geometry, two surfaces.** Keep `border-radius: 100vmax`, `width: max-content`,
   `max-width: calc(100vw - 32px)`, `10px 22px` padding and `margin: 28px auto 3rem` in both themes. A theme
@@ -475,20 +474,27 @@ brand order and the picker do not change between themes — only the surface and
   contrast.
 - **Active state belongs to the host.** `--nav-active-ink` / `--nav-active-bg` are the only state colours a
   product may override. Tesseract resolves them to its accent — `#7a3bc4` on light, `#a161ea` on dark, on a
-  13%/22% purple pill. The parent keeps `#3232ff` on light and `#9b9bff` on dark.
+  13%/22% purple pill. The parent uses `#3232ff` on light and `#9b9bff` on dark, and **18%** on dark rather
+  than 22%: at 22% the active ink measured 4.37:1 on its own tinted pill, just under AA; 18% gives 4.73:1.
+- **Measured contrast (10.27.2026, parent).** Dark ink on the dark pill 14.3:1, control icons 5.8:1, active
+  ink on its pill 4.73:1; light ink 17.3:1, control icons 3.6:1, active ink 4.9:1. The parent's blue logo is
+  still 2.34:1 on the dark pill — see the marks bullet.
 - **Brand marks are constants.** Do not theme the mark itself. Tesseract's `#a161ea` and the parent's
   `#3232ff` stay identical in both themes for now; whether marks should brighten on dark is an open
-  question (tracked in tesseract's `.dev/TODO.md`).
-- **Hover is one lockup, one motion.** Mark + wordmark sit inside a single anchor. Hover lifts the whole
-  lockup `1px` and lightens the wordmark to `--nav-ink-hover`; the mark shifts to a lighter tint of the same
-  hue. Never animate the two halves separately, and never darken grey → black.
+  question (tracked in tesseract's `.dev/TODO.md`). The parent blue is the weak case at 2.34:1 on the dark
+  pill, so this is the next decision if the mark reads muddy.
+- **Hover is one motion.** Both halves of the lockup lift `1px`; the wordmark resolves to `--nav-ink-hover`
+  and the mark fades to `opacity: .8`. The parent ships two anchors (mark, wordmark) rather than tesseract's
+  single one, because the parent markup predates the rule — the motion is identical either way. Never darken
+  grey → black.
 - **Focus uses the host accent.** The ring is `2px solid var(--nav-active-ink)`, offset `2px` (`1px` on icon
   buttons). A blue parent ring on a product-coloured nav is wrong.
 - **Collapse is content-driven.** The parent's four-link pill still fits at `720px`; tesseract's five links
   measure ~909px and collapse at `950px`. Measure the rendered pill before copying either number.
 
-Source of truth for the implemented precedent: `tesseract/styles.css` (`--nav-*` block and `.nitrox-nav`
-rules), `tesseract/navbar.html`, `tesseract/script.js` (`markActive`, breakpoint cue).
+Source of truth for the precedent: `tesseract/styles.css` (`--nav-*` block and `.nitrox-nav` rules),
+`tesseract/navbar.html`, `tesseract/script.js` (`markActive`, breakpoint cue). Parent implementation:
+`styles.css` (nav token blocks and `.nitrox-nav` section).
 
 ### 6.2 Theme picker
 

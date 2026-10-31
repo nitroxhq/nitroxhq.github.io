@@ -889,7 +889,45 @@ bottom again.
 
 ---
 
-## 23. Map of what we built → what it teaches
+## 23. A translucent surface is not the colour you typed
+
+**What we hit.** The navbar pill turned "dark" as `rgba(23, 23, 26, 0.82)`. The active link's blue,
+`#9b9bff`, measured 6.6:1 against the pill in isolation but only **4.37:1** against the active link's own
+tinted background — just under the 4.5:1 AA line, for text that had not changed at all.
+
+**ELI5.** A translucent paint is a tinted window, not a colour. What you see is the paint mixed with
+whatever is behind it. `rgba(255, 255, 255, 0.92)` looks white over paper and faintly lavender over the
+blue field. So "what colour is the pill" has no answer on its own — only "what colour is it *here*".
+
+**What actually happens.** Every translucent layer is composited onto the one beneath it, channel by
+channel: `result = alpha × front + (1 − alpha) × back`. The nav paints in this order:
+
+1. the blue field, `#3232ff` = `rgb(50, 50, 255)`,
+2. the pill, `rgba(23, 23, 26, 0.82)` over it → `rgb(28, 28, 67)`,
+3. the active link's pill, `#9b9bff` at 22% over that → `rgb(56, 56, 108)`,
+4. the link text, `#9b9bff`, on top.
+
+Contrast ratio is computed from the *final* sRGB values, so step 3's composite is the background you must
+measure against — not the nav pill, and certainly not the declared rgba. The white pill has the mirror-image
+problem: 92% white over blue is `rgb(239, 239, 255)`, which is why the "white" pill looks slightly cool on
+the homepage. `backdrop-filter: blur()` blurs the layer behind before compositing; on a flat field the
+average colour is the same, so it changes the texture, not the maths.
+
+**The fix.** Choose the alpha by measurement, not by copying. Dropping the active tint from 22% to 18%
+moved the composite to `rgb(51, 51, 101)` and the ratio to **4.73:1**, while the pill still reads as a
+pill. Lightening the text instead would have changed the brand colour; lowering the tint keeps it.
+
+**Prove it in DevTools.** Select the element, open the colour swatch: the picker shows the declared
+`rgba(...)` and the composited swatch underneath it, plus a contrast-ratio reading taken against what is
+actually behind. `getComputedStyle(el).backgroundColor` only ever returns the declared value, so it cannot
+answer this question. To see the raw pixel, use the eyedropper.
+
+**One thing to remember.** Contrast is a property of the rendered stack, not of a token. Composite first,
+then measure.
+
+---
+
+## 24. Map of what we built → what it teaches
 
 | Thing in the repo | Concept |
 |---|---|
@@ -903,6 +941,7 @@ bottom again.
 | Nav at 390px vs 1440px | `min()`, `clamp()`, `100vw` trap (section 11) |
 | Picker pushed to the right | Flexbox auto margins (section 12) |
 | Nav pill hugs its content | `max-content`, `fr` vs available space (section 21) |
+| Dark pill measuring 4.37:1 | Alpha compositing before contrast (section 23) |
 | One navbar for five pages | `fetch` + `innerHTML` (section 13) |
 | Panel opens under 720px | Media queries + `matchMedia` (section 14) |
 | Blue field starts at y=0 | Box model + paint order (sections 1–2) |

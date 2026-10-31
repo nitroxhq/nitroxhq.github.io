@@ -54,6 +54,25 @@ src: url('assets/fonts/instrument-sans/InstrumentSans-VariableFont_wdth,wght.wof
     --cta-bg: #ffffff;
     --cta-text: var(--bg-blue);
 
+    /* nav surface — 10.27.2026, theme-aware. DESIGN.md §6.1.1, tesseract is the
+       precedent. The default here is the dark field; the light blocks below
+       flip the tokens. Every colour the nav paints with lives here. */
+    --nav-bg: rgba(23, 23, 26, 0.82);
+    --nav-ink: #f4effc;
+    --nav-ink-hover: rgba(255, 255, 255, 0.62);
+    --nav-line: rgba(255, 255, 255, 0.12);
+    --nav-shadow: rgba(0, 0, 0, 0.55);
+    --nav-hover-bg: rgba(255, 255, 255, 0.08);
+    --nav-track-bg: rgba(255, 255, 255, 0.07);
+    --nav-control-ink: rgba(255, 255, 255, 0.55);
+    --nav-pressed-bg: #2c2c30;
+    --nav-pressed-shadow: rgba(0, 0, 0, 0.5);
+    --nav-active-ink: #9b9bff;
+    /* 18%, not the 22% in the tesseract table: at 22% the active ink measured
+       4.37:1 on the tinted pill, just under AA. 18% gives 4.73:1. See WORKLOG
+       10.27.2026 for the measurement. */
+    --nav-active-bg: rgba(155, 155, 255, 0.18);
+
     color-scheme: dark;
     scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
@@ -69,6 +88,20 @@ html[data-theme="light"] {
     --panel-hover-border: rgba(11, 11, 16, 0.24);
     --cta-bg: var(--bg-blue);
     --cta-text: #ffffff;
+
+    /* paper pill — DESIGN.md §6.1.1 light column */
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --nav-ink: #0b0b10;
+    --nav-ink-hover: rgba(11, 11, 16, 0.3);
+    --nav-line: rgba(11, 11, 16, 0.08);
+    --nav-shadow: rgba(11, 11, 16, 0.14);
+    --nav-hover-bg: rgba(11, 11, 16, 0.06);
+    --nav-track-bg: rgba(11, 11, 16, 0.05);
+    --nav-control-ink: rgba(11, 11, 16, 0.5);
+    --nav-pressed-bg: #ffffff;
+    --nav-pressed-shadow: rgba(11, 11, 16, 0.2);
+    --nav-active-ink: var(--bg-blue);
+    --nav-active-bg: rgba(50, 50, 255, 0.13);
 
     color-scheme: light;
     scrollbar-color: rgba(11, 11, 16, 0.28) transparent;
@@ -86,6 +119,20 @@ html[data-theme="light"] {
         --panel-hover-border: rgba(11, 11, 16, 0.24);
         --cta-bg: var(--bg-blue);
         --cta-text: #ffffff;
+
+        /* paper pill — DESIGN.md §6.1.1 light column */
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --nav-ink: #0b0b10;
+        --nav-ink-hover: rgba(11, 11, 16, 0.3);
+        --nav-line: rgba(11, 11, 16, 0.08);
+        --nav-shadow: rgba(11, 11, 16, 0.14);
+        --nav-hover-bg: rgba(11, 11, 16, 0.06);
+        --nav-track-bg: rgba(11, 11, 16, 0.05);
+        --nav-control-ink: rgba(11, 11, 16, 0.5);
+        --nav-pressed-bg: #ffffff;
+        --nav-pressed-shadow: rgba(11, 11, 16, 0.2);
+        --nav-active-ink: var(--bg-blue);
+        --nav-active-bg: rgba(50, 50, 255, 0.13);
 
         color-scheme: light;
         scrollbar-color: rgba(11, 11, 16, 0.28) transparent;
@@ -247,9 +294,12 @@ a.button:hover {
     margin: 28px auto 3rem auto;
     padding: 10px 22px;
     box-sizing: border-box;
-    background-color: var(--white);
+    background-color: var(--nav-bg);
+    color: var(--nav-ink);
     border-radius: 100vmax;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 8px 20px var(--nav-shadow);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
     position: relative;
     z-index: 10;
 }
@@ -278,17 +328,17 @@ a.button:hover {
     border: 0;
     border-radius: 999px;
     background: transparent;
-    color: var(--text-black);
+    color: var(--nav-ink);
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
 
 .nav-toggle:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: var(--nav-hover-bg);
 }
 
 .nav-toggle:focus-visible {
-    outline: 2px solid var(--bg-blue);
+    outline: 2px solid var(--nav-active-ink);
     outline-offset: 2px;
 }
 
@@ -320,7 +370,7 @@ a.button:hover {
     gap: 2px;
     padding: 3px;
     border-radius: 999px;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--nav-track-bg);
 }
 
 .theme-btn {
@@ -333,7 +383,7 @@ a.button:hover {
     border: 0;
     border-radius: 999px;
     background: transparent;
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--nav-control-ink);
     cursor: pointer;
     transition: background-color 0.18s ease, color 0.18s ease;
 }
@@ -346,23 +396,19 @@ a.button:hover {
 }
 
 .theme-btn:hover {
-    color: var(--text-black);
-    background-color: rgba(0, 0, 0, 0.07);
+    color: var(--nav-ink);
+    background-color: var(--nav-hover-bg);
 }
 
 .theme-btn[aria-pressed="true"] {
-    background-color: var(--white);
-    color: var(--text-black);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: var(--nav-pressed-bg);
+    color: var(--nav-ink);
+    box-shadow: 0 1px 3px var(--nav-pressed-shadow);
 }
 
 .theme-btn:focus-visible {
-    outline: 2px solid var(--bg-blue);
+    outline: 2px solid var(--nav-active-ink);
     outline-offset: 1px;
-}
-
-html[data-theme="light"] .nitrox-nav {
-    box-shadow: 0 8px 20px rgba(11, 11, 16, 0.12);
 }
 
 @keyframes nav-menu-in {
@@ -395,7 +441,7 @@ html[data-theme="light"] .nitrox-nav {
     font-family: var(--sans);
     font-size: 1.05rem;
     font-weight: 600;
-    color: var(--text-black);
+    color: var(--nav-ink);
     text-decoration: none;
     padding: 0.35rem 0.8rem;
     border-radius: 999px;
@@ -405,13 +451,22 @@ html[data-theme="light"] .nitrox-nav {
 }
 
 .nav-buttons:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: var(--nav-hover-bg);
     transform: translateY(-1px);
 }
 
 .nav-buttons.active {
-    color: var(--bg-blue);
-    background-color: rgba(0, 0, 0, 0.06);
+    color: var(--nav-active-ink);
+    background-color: var(--nav-active-bg);
+}
+
+/* The dark pill needs its own ring: the UA default is not reliably visible on
+   the obsidian surface. Host accent, per DESIGN.md §6.1.1. */
+.nav-buttons:focus-visible,
+.nav-brand-text:focus-visible,
+.nav-logo-link:focus-visible {
+    outline: 2px solid var(--nav-active-ink);
+    outline-offset: 2px;
 }
 
 .nav-brand {
@@ -424,14 +479,14 @@ html[data-theme="light"] .nitrox-nav {
     font-family: var(--sans);
     font-size: 1.15rem;
     font-weight: 600;
-    color: var(--text-black);
+    color: var(--nav-ink);
     letter-spacing: -0.01em;
     display: inline-block;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: color 0.25s ease, transform 0.25s ease;
 }
 
 .nav-brand-text:hover {
-    opacity: 0.8;
+    color: var(--nav-ink-hover);
     transform: translateY(-1px);
 }
 
@@ -481,7 +536,7 @@ html[data-theme="light"] .nitrox-nav {
         order: 3;
         flex-basis: 100%;
         width: 100%;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid var(--nav-line);
         padding-top: 4px;
     }
 
@@ -529,7 +584,7 @@ html[data-theme="light"] .nitrox-nav {
         left: 0.65rem;
         right: 0.65rem;
         height: 1px;
-        background-color: rgba(0, 0, 0, 0.08);
+        background-color: var(--nav-line);
     }
 
     .nav-brand-text {
